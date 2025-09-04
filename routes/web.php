@@ -55,4 +55,8 @@ Route::prefix('apps')->group(function () {
     Route::get('/spin-wheel', function () {
         return view('apps.spin_wheel.index');
     })->name('spin_wheel');
+
+    Route::get('/split-bill', function () {
+        return view('apps.split_bill.index');
+    })->name('splitify');
 });

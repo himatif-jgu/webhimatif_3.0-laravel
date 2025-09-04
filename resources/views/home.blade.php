@@ -840,7 +840,7 @@
                                     <div class="processing-block-one">
                                         <div class="inner-box">
                                             <span class="count-text">1</span>
-                                            <h3><a href="apps/split_bill/{{ route('home') }}">Splitify</a></h3>
+                                            <h3><a href="{{ route('splitify') }}">Splitify</a></h3>
                                             <p>Don’t let bills ruin friendships. HIMATIF's smart split-bill feature makes all calculations easy, fast, and transparent for everyone.</p>
                                         </div>
                                     </div>
