@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AppServiceProvider;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,4 +42,17 @@ Route::prefix('error')->group(function () {
         abort(500);
     })->name('error.500');
     // Tambahkan route error lain di sini jika diperlukan
+});
+
+Route::get('/comingsoon', function () {
+    return view('comingsoon.index');
+})->name('comingsoon');
+
+
+// Mini App
+
+Route::prefix('apps')->group(function () {
+    Route::get('/spin-wheel', function () {
+        return view('apps.spin_wheel.index');
+    })->name('spin_wheel');
 });

@@ -1,195 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layout_landingpage.master')
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+@section('css')
 
-    <title>Himatif JGU</title>
+@endsection
 
-    <!-- Fav Icon -->
-    <link rel="icon" href="assets/landing/images/logo-himatif.png" type="image/x-icon">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Outfit:wght@100..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Stylesheets -->
-    <link href="assets/landing/css/font-awesome-all.css" rel="stylesheet">
-    <link href="assets/landing/css/flaticon.css" rel="stylesheet">
-    <link href="assets/landing/css/owl.css" rel="stylesheet">
-    <link href="assets/landing/css/bootstrap.css" rel="stylesheet">
-    <link href="assets/landing/css/jquery.fancybox.min.css" rel="stylesheet">
-    <link href="assets/landing/css/animate.css" rel="stylesheet">
-    <link href="assets/landing/css/nice-select.css" rel="stylesheet">
-    <link href="assets/landing/css/odometer.css" rel="stylesheet">
-    <link href="assets/landing/css/elpath.css" rel="stylesheet">
-    <link href="assets/landing/css/color.css" id="jssDefault" rel="stylesheet">
-    <link href="assets/landing/css/rtl.css" rel="stylesheet">
-    <link href="assets/landing/css/style.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/header.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/banner.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/clients.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/about.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/funfact.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/chooseus.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/category.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/industries.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/process.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/team.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/news.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/subscribe.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/footer.css" rel="stylesheet">
-    <link href="assets/landing/css/responsive.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/faq.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/contact.css" rel="stylesheet">
-    <link href="assets/landing/css/module-css/page-title.css" rel="stylesheet">
-
-</head>
-
-
+@section('content')
 <!-- page wrapper -->
 
-<body>
+
 
     <div class="boxed_wrapper ltr">
-
-
-        <!-- preloader -->
-        <div class="loader-wrap">
-            <div class="preloader">
-                <div class="preloader-close"><i class="icon-27"></i></div>
-                <div id="handle-preloader" class="handle-preloader">
-                    <div class="animation-preloader">
-                        <div class="spinner"></div>
-                        <div class="txt-loading">
-                            <span data-text-preloader="H" class="letters-loading">
-                                H
-                            </span>
-                            <span data-text-preloader="I" class="letters-loading">
-                                I
-                            </span>
-                            <span data-text-preloader="M" class="letters-loading">
-                                M
-                            </span>
-                            <span data-text-preloader="A" class="letters-loading">
-                                A
-                            </span>
-                            <span data-text-preloader="T" class="letters-loading">
-                                T
-                            </span>
-                            <span data-text-preloader="I" class="letters-loading">
-                                I
-                            </span>
-                            <span data-text-preloader="H" class="letters-loading">
-                                F
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- preloader end -->
-
-
-        <!-- page-direction -->
-        <div class="page_direction">
-            <div class="demo-rtl direction_switch"><button class="rtl">RTL</button></div>
-            <div class="demo-ltr direction_switch"><button class="ltr">LTR</button></div>
-        </div>
-        <!-- page-direction end -->
-
-
-        <!--Search Popup-->
-        <div id="search-popup" class="search-popup">
-            <div class="popup-inner">
-                <div class="upper-box">
-                    <figure class="logo-box"><a href="{{ route('home') }}"><img
-                                src="assets/landing/images/logo-himatif-jgu.png" alt=""></a></figure>
-                    <div class="close-search"><span class="icon-27"></span></div>
-                </div>
-                <div class="overlay-layer"></div>
-                <div class="auto-container">
-                    <div class="search-form">
-                        <form method="post" action="{{ route('home') }}">
-                            <div class="form-group">
-                                <fieldset>
-                                    <input type="search" class="form-control" name="search-input" value=""
-                                        placeholder="Type your keyword and hit" required>
-                                    <button type="submit"><i class="icon-1"></i></button>
-                                </fieldset>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- main header -->
-        <header class="main-header header-style-one">
-            <!-- header-lower -->
-            <div class="header-lower">
-                <div class="auto-container">
-                    <div class="outer-box">
-                        <figure class="logo-box pl_15"><a href="{{ route('home') }}"><img
-                                    src="assets/landing/images/logo-himatif-jgu.png" alt=""></a></figure>
-                        <div class="menu-area">
-                            <!--Mobile Navigation Toggler-->
-                            <div class="mobile-nav-toggler">
-                                <i class="icon-bar"></i>
-                                <i class="icon-bar"></i>
-                                <i class="icon-bar"></i>
-                            </div>
-                            <nav id="navbar" class="main-menu navbar-expand-md navbar-light clearfix">
-                                <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
-                                    <ul class="navigation">
-                                        <li><a href="#home" class="nav-link scrollto active">Home</a></li>
-                                        <li><a href="#about" class="nav-link scrollto">About</a></li>
-                                        <li><a href="#history" class="nav-link scrollto">History</a></li>
-                                        <li><a href="#foundation" class="nav-link scrollto">Foundation</a></li>
-                                        <li><a href="#team" class="nav-link scrollto">Team</a></li>
-                                        <li><a href="#blog" class="nav-link scrollto">Blog</a></li>
-                                        <li><a href="#contact" class="nav-link scrollto">Contact</a></li>
-                                    </ul>
-                                </div>
-                            </nav>
-                        </div>
-                        <div class="menu-right-content">
-                            <div class="search-btn mr_20"><button class="search-toggler"><i
-                                        class="icon-1"></i></button></div>
-                            {{-- <div class="link-box mr_20"><a href="{{ route('login') }}">Log In</a></div> --}}
-                            <div class="btn-box"><a href="{{ route('error.404') }}" class="theme-btn btn-one">Login</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--sticky Header-->
-            <div class="sticky-header">
-                <div class="auto-container">
-                    <div class="outer-box">
-                        <figure class="logo-box pl_15"><a href="{{ route('home') }}"><img
-                                    src="assets/landing/images/logo-himatif-jgu.png" alt=""></a></figure>
-                        <div class="menu-area">
-                            <nav class="main-menu clearfix">
-                                <!--Keep This Empty / Menu will come through Javascript-->
-                            </nav>
-                        </div>
-                        <div class="menu-right-content">
-                            <div class="search-btn mr_20"><button class="search-toggler"><i
-                                        class="icon-1"></i></button></div>
-                            {{-- <div class="link-box mr_20"><a href="{{ route('login') }}">Log In</a></div> --}}
-                            <div class="btn-box"><a href="{{ route('error.404') }}" class="theme-btn btn-one">Login</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- main-header end -->
-
 
         <!-- Mobile Menu  -->
         <div class="mobile-menu">
@@ -717,7 +537,7 @@
                     <div class="industries-block-one">
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="user" width="40" height="40"></i></div>
-                            <h3><a href="#">Head & Vice</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">Head & Vice</a></h3>
                             <p>Core Structure</p>
                         </div>
                     </div>
@@ -725,7 +545,7 @@
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="file-text" width="40" height="40"></i>
                             </div>
-                            <h3><a href="#">General Secretary</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">General Secretary</a></h3>
                             <p>Administration & Archives</p>
                         </div>
                     </div>
@@ -733,14 +553,14 @@
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="credit-card" width="40" height="40"></i>
                             </div>
-                            <h3><a href="#">General Treasurer</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">General Treasurer</a></h3>
                             <p>Financial Management</p>
                         </div>
                     </div>
                     <div class="industries-block-one">
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="code" width="40" height="40"></i></div>
-                            <h3><a href="#">R&D Department</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">R&D Department</a></h3>
                             <p>Research & Development</p>
                         </div>
                     </div>
@@ -748,21 +568,21 @@
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="message-square" width="40"
                                     height="40"></i></div>
-                            <h3><a href="#">Media & Info Dept</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">Media & Info Dept</a></h3>
                             <p>Media & Information</p>
                         </div>
                     </div>
                     <div class="industries-block-one">
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="users" width="40" height="40"></i></div>
-                            <h3><a href="#">Public Relations</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">Public Relations</a></h3>
                             <p>External Relations</p>
                         </div>
                     </div>
                     <div class="industries-block-one">
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="award" width="40" height="40"></i></div>
-                            <h3><a href="#">HRD Department</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">HRD Department</a></h3>
                             <p>Human Resources Development</p>
                         </div>
                     </div>
@@ -770,7 +590,7 @@
                         <div class="inner-box">
                             <div class="icon-box"><i data-feather="shopping-cart" width="40" height="40"></i>
                             </div>
-                            <h3><a href="#">Fundraising</a></h3>
+                            <h3><a href="{{ route('comingsoon') }}">Fundraising</a></h3>
                             <p>Funding & Business</p>
                         </div>
                     </div>
@@ -1038,7 +858,7 @@
                                     <div class="processing-block-one">
                                         <div class="inner-box">
                                             <span class="count-text">3</span>
-                                            <h3><a href="{{ route('home') }}">Spin Wheel</a></h3>
+                                            <h3><a href="{{ route('spin_wheel') }}">Spin Wheel</a></h3>
                                             <p>Fair roles, fun results. This interactive wheel is our go-to tool for random draws, perfect for assigning committee roles, presentation orders, or any task that requires an unbiased choice.</p>
                                         </div>
                                     </div>
@@ -1051,7 +871,7 @@
                                     <div class="processing-block-one">
                                         <div class="inner-box">
                                             <span class="count-text">1</span>
-                                            <h3><a href="{{ route('home') }}">HIMATIF Connect</a></h3>
+                                            <h3><a href="{{ route('comingsoon') }}">HIMATIF Connect</a></h3>
                                             <p>Effortless attendance, instant access. Our RFID-based system allows members to check in to events or access facilities with a simple tap of their ID card, making every process seamless.</p>
                                         </div>
                                     </div>
@@ -1060,7 +880,7 @@
                                     <div class="processing-block-one">
                                         <div class="inner-box">
                                             <span class="count-text">2</span>
-                                            <h3><a href="{{ route('home') }}">Project Hub</a></h3>
+                                            <h3><a href="{{ route('comingsoon') }}">Project Hub</a></h3>
                                             <p>Organize, collaborate, and deliver. A centralized platform for managing HIMATIF projects, from task assignments and progress tracking to file sharing, ensuring every team stays on schedule.</p>
                                         </div>
                                     </div>
@@ -1069,7 +889,7 @@
                                     <div class="processing-block-one">
                                         <div class="inner-box">
                                             <span class="count-text">3</span>
-                                            <h3><a href="{{ route('home') }}">Event Hub</a></h3>
+                                            <h3><a href="{{ route('comingsoon') }}">Event Hub</a></h3>
                                             <p>Your central source for all things HIMATIF. This feature provides a complete calendar of upcoming workshops, seminars, and competitions. Members can register for events, access schedules, and download post-event materials all in one place.</p>
                                         </div>
                                     </div>
@@ -1245,116 +1065,7 @@
 
 
         <!-- main-footer -->
-        <footer class="main-footer">
-            <div class="widget-section p_relative pt_80 pb_100">
-                <div class="auto-container">
-                    <div class="row clearfix">
-                        <div class="col-lg-4 col-md-6 col-sm-12 footer-column">
-                            <div class="footer-widget logo-widget mr_30">
-                                <figure class="footer-logo mb_20"><a href="{{ route('home') }}"><img
-                                            src="assets/landing/images/logo-himatif-jgu.png" alt=""></a>
-                                </figure>
-                                <p>HIMATIF JGU is the official student organization dedicated to developing potential,
-                                    building networks, and driving innovation in technology for the Informatics
-                                    Engineering students of Jakarta Global University.</p>
-                                <!-- <div class="download-btn">
-                                    <a href="about.html" class="apple-store">
-                                        <img src="assets/landing/images/icons/icon-4.png" alt="">
-                                        <span>Download on</span>
-                                        App Store
-                                    </a>
-                                    <a href="about.html" class="play-store">
-                                        <img src="assets/landing/images/icons/icon-5.png" alt="">
-                                        <span>Get it on</span>
-                                        Google Play
-                                    </a>
-                                </div> -->
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12 footer-column">
-                            <div class="footer-widget links-widget">
-                                <div class="widget-title">
-                                    <h4>About Us</h4>
-                                </div>
-                                <div class="widget-content">
-                                    <ul class="links-list clearfix">
-                                        <li><a href="{{ route('home') }}">History</a></li>
-                                        <li><a href="{{ route('home') }}">Vision & Mission</a></li>
-                                        <li><a href="{{ route('home') }}">Our Structure</a></li>
-                                        <li><a href="{{ route('home') }}">The Cabinet</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12 footer-column">
-                            <div class="footer-widget links-widget">
-                                <div class="widget-title">
-                                    <h4>Activities</h4>
-                                </div>
-                                <div class="widget-content">
-                                    <ul class="links-list clearfix">
-                                        <li><a href="{{ route('home') }}">Programs</a></li>
-                                        <li><a href="{{ route('home') }}">Workshops & Training</a></li>
-                                        <li><a href="{{ route('home') }}">Competitions</a></li>
-                                        <li><a href="{{ route('home') }}">Event Gallery</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12 footer-column">
-                            <div class="footer-widget links-widget">
-                                <div class="widget-title">
-                                    <h4>Quick Links</h4>
-                                </div>
-                                <div class="widget-content">
-                                    <ul class="links-list clearfix">
-                                        <li><a href="about.html">Membership</a></li>
-                                        <li><a href="{{ route('home') }}">Blog & Articles</a></li>
-                                        <li><a href="{{ route('home') }}">Partnerships</a></li>
-                                        <li><a href="blog.html">Latest News</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12 footer-column">
-                            <div class="footer-widget links-widget">
-                                <div class="widget-title">
-                                    <h4>Support</h4>
-                                </div>
-                                <div class="widget-content">
-                                    <ul class="links-list clearfix">
-                                        <li><a href="contact.html">Contact Us</a></li>
-                                        <li><a href="faq.html">FAQ</a></li>
-                                        <li><a href="{{ route('home') }}">Secretariat Location</a></li>
-                                        <li><a href="{{ route('home') }}">Privacy Policy</a></li>
-                                        <!-- <li><a href="{{ route('home') }}">Terms & Conditions</a></li> -->
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <div class="auto-container">
-                    <div class="bottom-inner">
-                        <div class="copyright">
-                            <p>Copyright &copy; 2024 <a href="{{ route('home') }}">HIMATIF Jakarta Global University</a> All
-                                rights reserved.</p>
-                        </div>
-                        <ul class="social-links">
-                            <li>
-                                <h5>Follow Us On:</h5>
-                            </li>
-                            <li><a href="{{ route('home') }}"><i class="icon-22"></i></a></li>
-                            <li><a href="{{ route('home') }}"><i class="icon-23"></i></a></li>
-                            <li><a href="{{ route('home') }}"><i class="icon-24"></i></a></li>
-                            <li><a href="{{ route('home') }}"><i class="icon-25"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </footer>
+
         <!-- main-footer end -->
 
 
@@ -1367,31 +1078,9 @@
         </div>
 
     </div>
+@endsection
 
-
-    <!-- jequery plugins -->
-    <script src="assets/landing/js/jquery.js"></script>
-    <script src="assets/landing/js/bootstrap.min.js"></script>
-    <script src="assets/landing/js/owl.js"></script>
-    <script src="assets/landing/js/wow.js"></script>
-    <script src="assets/landing/js/validation.js"></script>
-    <script src="assets/landing/js/jquery.fancybox.js"></script>
-    <script src="assets/landing/js/appear.js"></script>
-    <script src="assets/landing/js/isotope.js"></script>
-    <script src="assets/landing/js/parallax-scroll.js"></script>
-    <script src="assets/landing/js/jquery.nice-select.min.js"></script>
-    <script src="assets/landing/js/scrolltop.min.js"></script>
-    <script src="assets/landing/js/gsap.js"></script>
-    <script src="assets/landing/js/ScrollTrigger.js"></script>
-    <script src="assets/landing/js/SplitText.js"></script>
-    <script src="assets/landing/js/language.js"></script>
-    <script src="assets/landing/js/jquery-ui.js"></script>
-    <script src="assets/landing/js/lenis.min.js"></script>
-    <script src="assets/landing/js/odometer.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- main-js -->
-    <script src="assets/landing/js/script.js"></script>
+@section('script')
     <script>
         // Initialize Feather Icons
         feather.replace();
@@ -1415,7 +1104,4 @@
                 });
             });
         });
-    </script>
-</body><!-- End of .page_wrapper -->
-
-</html>
+@endsection
