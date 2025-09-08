@@ -101,7 +101,7 @@
                             <div class="search-btn mr_20"><button class="search-toggler"><i
                                         class="icon-1"></i></button></div>
                             {{-- <div class="link-box mr_20"><a href="{{ route('login') }}">Log In</a></div> --}}
-                            <div class="btn-box"><a href="https://master.himatif-jgu.org" class="theme-btn btn-one">Login</a></div>
+                            <div class="btn-box"><a href="master.himatif-jgu.org" class="theme-btn btn-one">Login</a></div>
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                             <div class="search-btn mr_20"><button class="search-toggler"><i
                                         class="icon-1"></i></button></div>
                             {{-- <div class="link-box mr_20"><a href="{{ route('login') }}">Log In</a></div> --}}
-                            <div class="btn-box"><a href="https://https://master.himatif-jgu.org" class="theme-btn btn-one">Login</a></div>
+                            <div class="btn-box"><a href="master.himatif-jgu.org" class="theme-btn btn-one">Login</a></div>
                         </div>
                     </div>
                 </div>
