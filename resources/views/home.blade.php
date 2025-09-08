@@ -849,7 +849,7 @@
                                     <div class="processing-block-one">
                                         <div class="inner-box">
                                             <span class="count-text">2</span>
-                                            <h3><a href="{{ route('home') }}">Terminal Goib</a></h3>
+                                            <h3><a href="{{ route('cek_khodam') }}">Terminal Goib</a></h3>
                                             <p>Uncover your coding spirit. Our AI terminal assigns you a guardian—be it a legendary khodam, a powerful programming language, or an essential developer tool.</p>
                                         </div>
                                     </div>

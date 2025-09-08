@@ -1,0 +1,64 @@
+ :root{
+    /* GANTI INI untuk ubah background */
+        --bg-url: url('https://s.jgu.ac.id/repo/a350078d-8c0f-11f0-8d50-92218753e46b');
+      --glass: rgba(17,24,39,.6);
+      --text: #e5e7eb;
+      --muted: #cbd5e1;
+      --ring: rgba(34,211,238,.25);
+      --shadow: 0 16px 60px rgba(0,0,0,.35);
+    }
+    *{ box-sizing:border-box }
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Fira Sans", sans-serif;
+      display:grid; place-items:center; position:relative;
+    }
+    /* Background + overlay */
+    body::before{ content:""; position:fixed; inset:0; background-image: var(--bg-url); background-size:cover; background-position:center; filter:brightness(.55) saturate(1.1); transform:scale(1.03); }
+    body::after{ content:""; position:fixed; inset:0; background: radial-gradient(1000px 500px at 75% 15%, rgba(59,130,246,.25), transparent), linear-gradient(to bottom, rgba(2,6,23,.55), rgba(2,6,23,.75)); pointer-events:none; }
+
+    .wrap{ width: min(920px, 92vw); z-index:1; }
+    .card{ background: var(--glass); border: 1px solid rgba(255,255,255,.08); border-radius: 26px; padding: 28px 28px 22px; box-shadow: var(--shadow); backdrop-filter: blur(10px); }
+
+    .hello, .sub{ text-align:center; color: var(--muted) }
+    .hello{ margin: 8px 0 6px }
+    .sub{ margin: 0 0 18px }
+    .subtitle{ text-align:center; color: var(--muted); margin: 4px 0 14px }
+    .khodam{ font-size: clamp(32px, 3.4vw, 54px); text-align:center; margin: 4px 0 8px; font-weight: 900; }
+
+    .meta{ display:flex; align-items:center; justify-content:center; gap:.6rem; margin-bottom:16px; flex-wrap:wrap; }
+    .pill{ display:inline-flex; align-items:center; gap:.45rem; padding:.4rem .75rem; border-radius:999px; font-weight:800; font-size:.9rem; border:1px solid rgba(255,255,255,.12); }
+    .pill.common{ background:#e5e7eb; color:#111827; }
+    .pill.rare{ background:#e0f2fe; color:#075985; }
+    .pill.epic{ background:#f3e8ff; color:#581c87; }
+    .pill.legendary{ background:#fef3c7; color:#92400e; }
+    .pill.mythic{ background:linear-gradient(90deg,#fde68a,#f0abfc); color:#581c87; }
+    .meta .sep{ opacity:.6 }
+
+    .power{ margin:10px auto 2px; width:min(560px, 92%); }
+    .power-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; color:#cbd5e1; font-weight:800 }
+    .bar{ height:10px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.16); overflow:hidden }
+    .bar > span{ display:block; height:100%; background: linear-gradient(90deg, #60a5fa, #22d3ee); }
+
+    .bubble{ background: rgba(2,6,23,.65); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 16px; position:relative; }
+    .bubble::before{ content:""; position:absolute; left:10px; top:-1px; width:3px; height:calc(100% + 2px); background: linear-gradient(180deg, #22d3ee, #f59e0b); border-radius:4px; }
+
+    .hr{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent); margin:16px 0; }
+
+    .share{ display:flex; gap:.6rem; flex-wrap:wrap; justify-content:center; }
+    .btn{ padding:.8rem 1.1rem; border-radius:12px; border:none; font-weight:800; cursor:pointer; box-shadow: 0 10px 24px rgba(0,0,0,.25); transition: transform .02s ease; }
+    .btn:active{ transform: translateY(1px); }
+    .btn.wa{ background:#25D366; color:#0b3c1a }
+    .btn.tw{ background:#1DA1F2; color:#06283b }
+    .btn.secondary{ background:#78EB54; color:#1f2937 }
+
+    .form{ display:flex; gap:.6rem; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+    input[type="text"]{ width: min(360px, 92vw); padding: .9rem 1rem; border-radius:12px; border:2px solid rgba(255,255,255,.22); background: rgba(2,6,23,.45); color:#fff; outline:none; font-weight:700 }
+    input[type="text"]:focus{ box-shadow: 0 0 0 6px var(--ring); border-color:#22d3ee }
+
+    .row-top{ display:flex; justify-content:center; align-items:center; margin-bottom:6px; gap:12px; }
+    .logo{ font-weight:900; letter-spacing:.4px; }
+
+    .grid-learn{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: .8rem; margin-top:12px; }
+    .tile{ background: rgba(2,6,23,.55); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:12px; }
+    .tile h4{ margin:.2rem 0 .4rem; }

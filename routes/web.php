@@ -59,4 +59,7 @@ Route::prefix('apps')->group(function () {
     Route::get('/split-bill', function () {
         return view('apps.split_bill.index');
     })->name('splitify');
+    Route::get('/cek-khodam', function () {
+        return view('apps.cek_khodam.index');
+    })->name('cek_khodam');
 });
