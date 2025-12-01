@@ -1,8 +1,10 @@
-@extends('layout_landingpage.master')
+@extends('landingpage.layout.master')
 
 @section('css')
 
+
 @endsection
+
 
 @section('content')
 <!-- page wrapper -->
@@ -904,13 +906,30 @@
 
 
         <!-- news-section -->
-        {{-- <section id="blog" class="news-section pt_120 pb_90">
+        <section id="blog" class="news-section pt_120 pb_90">
             <div class="auto-container">
                 <div class="sec-title centred pb_60 sec-title-animation animation-style2">
                     <span class="sub-title mb_10 title-animation">Media</span>
                     <h2 class="title-animation">Latest News</h2>
                 </div>
                 <div class="row clearfix">
+                    @forelse($latestBlogs as $index => $blog)
+                    <div class="col-lg-4 col-md-6 col-sm-12 news-block">
+                        <div class="news-block-one wow fadeInUp animated" data-wow-delay="{{ $index * 300 }}ms"
+                            data-wow-duration="1500ms">
+                            <div class="inner-box">
+                                <div class="bg-layer"
+                                    style="background-image: url({{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('assets/landing/images/news/news-' . ($index + 1) . '.jpg') }});"></div>
+                                <div class="overlay-bg-layer"
+                                    style="background-image: url({{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('assets/landing/images/news/news-' . ($index + 1) . '.jpg') }});"></div>
+                                <div class="content-box">
+                                    <span class="post-date">{{ $blog->published_at->format('F d, Y') }}</span>
+                                    <h4><a href="{{ route('blog.show', $blog->slug) }}">{{ Str::limit($blog->title, 60) }}</a></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
                     <div class="col-lg-4 col-md-6 col-sm-12 news-block">
                         <div class="news-block-one wow fadeInUp animated" data-wow-delay="00ms"
                             data-wow-duration="1500ms">
@@ -920,50 +939,18 @@
                                 <div class="overlay-bg-layer"
                                     style="background-image: url(assets/landing/images/news/news-1.jpg);"></div>
                                 <div class="content-box">
-                                    <span class="post-date">Juli 05, 2025</span>
-                                    <h4><a href="blog-details.html">Create a series of blog posts discussing common
-                                            interview</a></h4>
+                                    <span class="post-date">Coming Soon</span>
+                                    <h4><a href="{{ route('blog.index') }}">No blog posts available yet</a></h4>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block">
-                        <div class="news-block-one wow fadeInUp animated" data-wow-delay="300ms"
-                            data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="bg-layer"
-                                    style="background-image: url(assets/landing/images/news/news-2.jpg);"></div>
-                                <div class="overlay-bg-layer"
-                                    style="background-image: url(assets/landing/images/news/news-2.jpg);"></div>
-                                <div class="content-box">
-                                    <span class="post-date">Juni 19, 2025</span>
-                                    <h4><a href="blog-details.html">Explore the concept of personal branding and its
-                                            impact on</a></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block">
-                        <div class="news-block-one wow fadeInUp animated" data-wow-delay="600ms"
-                            data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="bg-layer"
-                                    style="background-image: url(assets/landing/images/news/news-3.jpg);"></div>
-                                <div class="overlay-bg-layer"
-                                    style="background-image: url(assets/landing/images/news/news-3.jpg);"></div>
-                                <div class="content-box">
-                                    <span class="post-date">March 18, 2023</span>
-                                    <h4><a href="blog-details.html">Feature interviews with employees from top
-                                            companies</a></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="btn-box centred mt_60"><a href="{{ route('home') }}" class="theme-btn btn-one">See More</a>
+                    @endforelse
+                    <div class="btn-box centred mt_60"><a href="{{ route('blog.index') }}" class="theme-btn btn-one">See More</a>
                     </div>
                 </div>
             </div>
-        </section> --}}
+        </section>
         <!-- news-section end -->
 
         <section class="page-title centred pt_110">
@@ -1078,30 +1065,4 @@
         </div>
 
     </div>
-@endsection
-
-@section('script')
-    <script>
-        // Initialize Feather Icons
-        feather.replace();
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const scrolltoLinks = document.querySelectorAll('.scrollto');
-
-            scrolltoLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault(); // Mencegah perilaku default dari tautan
-
-                    let targetId = this.getAttribute('href');
-                    let targetElement = document.querySelector(targetId);
-
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
 @endsection

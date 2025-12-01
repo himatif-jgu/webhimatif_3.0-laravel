@@ -1,10 +1,24 @@
 <?php
 
-use App\Providers\AppServiceProvider;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\DivisionController;
+use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\LandingPageBlogController;
+use App\Http\Controllers\ProfileController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home');
+    $latestBlogs = \App\Models\Blog::with(['category', 'author'])
+        ->published()
+        ->latest('published_at')
+        ->limit(3)
+        ->get();
+    
+    return view('home', compact('latestBlogs'));
 })->name('home');
 
 Route::get('/login', function () {
@@ -63,3 +77,50 @@ Route::prefix('apps')->group(function () {
         return view('apps.cek_khodam.index');
     })->name('cek_khodam');
 });
+
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/', [LandingPageBlogController::class, 'index'])->name('index');
+    Route::get('/{slug}', [LandingPageBlogController::class, 'show'])->name('show');
+});
+
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::bind('member', function ($value) {
+    try {
+        $id = decrypt($value);
+    } catch (\Exception $e) {
+        abort(404);
+    }
+    return User::findOrFail($id);
+});
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'role:admin'])
+    ->group(function () {
+        Route::patch('members/{member}/toggle-active', [MemberController::class, 'toggleActive'])->name('members.toggle-active');
+        Route::resource('members', MemberController::class);
+        Route::resource('roles', RoleController::class)->except(['show']);
+        Route::resource('permissions', PermissionController::class)->except(['show', 'create']);
+        Route::resource('divisions', DivisionController::class)->except(['show']);
+    });
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'role:admin|bph'])
+    ->group(function () {
+        Route::resource('blogs', BlogController::class)->except(['show']);
+        Route::resource('blog-categories', BlogCategoryController::class)->except(['show']);
+    });
+
+require __DIR__.'/auth.php';

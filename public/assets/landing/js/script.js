@@ -552,6 +552,7 @@
 
 
 	const lenis = new Lenis()
+	window.lenisInstance = lenis;
 
 	lenis.on('scroll', () => {
 
@@ -564,6 +565,127 @@
 
 	requestAnimationFrame(raf)
 
+	function getNavigationOffset() {
+		var header = document.querySelector('.main-header');
+		if (!header || window.innerWidth <= 991) {
+			return 0;
+		}
+		return header.offsetHeight + 10;
+	}
+
+	function smoothScrollToElement(target) {
+		if (!target) {
+			return;
+		}
+		var position = target.getBoundingClientRect().top + window.pageYOffset - getNavigationOffset();
+		if (position < 0) {
+			position = 0;
+		}
+
+		if (window.lenisInstance && typeof window.lenisInstance.scrollTo === 'function') {
+			window.lenisInstance.scrollTo(position, {
+				duration: 1.1,
+				easing: function(t) {
+					return 1 - Math.pow(1 - t, 3);
+				}
+			});
+		} else {
+			window.scrollTo({
+				top: position,
+				behavior: 'smooth'
+			});
+		}
+	}
+
+	function highlightActiveNav(hash) {
+		if (!hash) {
+			return;
+		}
+		var navLinks = document.querySelectorAll('.main-menu .navigation > li > a');
+		if (!navLinks.length) {
+			return;
+		}
+		navLinks.forEach(function(link) {
+			if (link.getAttribute('href') === hash) {
+				link.classList.add('active');
+			} else {
+				link.classList.remove('active');
+			}
+		});
+	}
+
+	function initSmoothScrollAnchors() {
+		var links = document.querySelectorAll('.scrollto');
+		if (!links.length) {
+			return;
+		}
+
+		links.forEach(function(link) {
+			link.addEventListener('click', function(e) {
+				var hash = this.getAttribute('href');
+				if (!hash || hash.charAt(0) !== '#') {
+					return;
+				}
+				var target = document.querySelector(hash);
+				if (!target) {
+					return;
+				}
+				e.preventDefault();
+				if ($('body').hasClass('mobile-menu-visible')) {
+					$('body').removeClass('mobile-menu-visible');
+				}
+				smoothScrollToElement(target);
+				highlightActiveNav(hash);
+			});
+		});
+
+		if (window.location.hash) {
+			var hash = window.location.hash;
+			var target = document.querySelector(hash);
+			if (target) {
+				setTimeout(function() {
+					smoothScrollToElement(target);
+					highlightActiveNav(hash);
+				}, 100);
+			}
+		}
+	}
+
+	function initScrollSpy() {
+		if (typeof IntersectionObserver === 'undefined') {
+			return;
+		}
+
+		var sections = [];
+		document.querySelectorAll('.scrollto').forEach(function(link) {
+			var hash = link.getAttribute('href');
+			if (hash && hash.charAt(0) === '#') {
+				var target = document.querySelector(hash);
+				if (target && sections.indexOf(target) === -1) {
+					sections.push(target);
+				}
+			}
+		});
+
+		if (!sections.length) {
+			return;
+		}
+
+		var observer = new IntersectionObserver(function(entries) {
+			entries.forEach(function(entry) {
+				if (entry.isIntersecting) {
+					highlightActiveNav('#' + entry.target.id);
+				}
+			});
+		}, {
+			rootMargin: '-50% 0px -40% 0px',
+			threshold: 0
+		});
+
+		sections.forEach(function(section) {
+			observer.observe(section);
+		});
+	}
 
 
 	// Animation gsap 
@@ -662,8 +784,12 @@
 
 	jQuery(document).on('ready', function () {
 		(function ($) {
-			// add your functions
 			directionswitch();
+			initSmoothScrollAnchors();
+			initScrollSpy();
+			if (window.feather && typeof window.feather.replace === 'function') {
+				window.feather.replace();
+			}
 		})(jQuery);
 	});
 
