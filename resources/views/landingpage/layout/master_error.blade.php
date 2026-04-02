@@ -20,7 +20,7 @@
     </main>
 
     <!-- Footer Section -->
-    @include('layout_landingpage.script')
+    @include('landingpage.layout.script')
     <script>
         // Custom scripts can go here
     </script>

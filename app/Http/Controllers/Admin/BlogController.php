@@ -8,6 +8,7 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 

@@ -72,20 +72,16 @@
               <td>{{ number_format($blog->views_count) }}</td>
               <td>{{ $blog->published_at ? $blog->published_at->format('d M Y') : '-' }}</td>
               <td>
-                <div class="d-flex gap-1">
-                  <a href="{{ route('blog.show', $blog->slug) }}" class="btn btn-sm btn-outline-info" target="_blank" title="View">
-                    <i class="link-icon" data-feather="eye"></i>
+                <div class="d-flex flex-wrap gap-1">
+                  <a href="{{ route('blog.show', $blog->slug) }}" class="btn btn-sm btn-outline-secondary" target="_blank" title="View">
+                    <i data-lucide="eye"></i>
                   </a>
                   <a href="{{ route('admin.blogs.edit', $blog) }}" class="btn btn-sm btn-outline-primary" title="Edit">
-                    <i class="link-icon" data-feather="edit"></i>
+                    <i data-lucide="pencil"></i>
                   </a>
-                  <form action="{{ route('admin.blogs.destroy', $blog) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Delete">
-                      <i class="link-icon" data-feather="trash-2"></i>
-                    </button>
-                  </form>
+                  <button class="btn btn-sm btn-outline-danger btn-delete" data-url="{{ route('admin.blogs.destroy', $blog) }}" title="Delete">
+                    <i data-lucide="trash"></i>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -105,4 +101,41 @@
     @endif
   </div>
 </div>
+
+<!-- Form for delete action (hidden) -->
+<form id="delete-form" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+
+@push('plugin-scripts')
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endpush
+
+@push('custom-scripts')
+    <script>
+        $(function() {
+            // Handle Delete Button Click with SweetAlert
+            $(document).on('click', '.btn-delete', function() {
+                var url = $(this).data('url');
+                
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var form = $('#delete-form');
+                        form.attr('action', url);
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
 @endsection

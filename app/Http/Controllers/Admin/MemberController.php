@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateMemberRequest;
 use App\Models\Division;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
@@ -176,14 +177,14 @@ class MemberController extends Controller
                 if ($member->avatar) {
                     Storage::disk('public')->delete($member->avatar);
                 }
-                
+
                 $image = $request->avatar_base64;
                 $image = str_replace('data:image/png;base64,', '', $image);
                 $image = str_replace('data:image/jpeg;base64,', '', $image);
                 $image = str_replace('data:image/jpg;base64,', '', $image);
                 $image = str_replace(' ', '+', $image);
                 $imageName = 'avatar_' . time() . '_' . uniqid() . '.png';
-                
+
                 Storage::disk('public')->put('avatars/' . $imageName, base64_decode($image));
                 $validated['avatar'] = 'avatars/' . $imageName;
             }

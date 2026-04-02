@@ -24,6 +24,27 @@
           <span class="link-title">Kelola Anggota</span>
         </a>
       </li>
+
+      <li class="nav-item {{ active_class(['admin/meetings*']) }}">
+        <a class="nav-link" data-bs-toggle="collapse" href="#meetingMenu" role="button" aria-expanded="{{ active_class(['admin/meetings*'], 'true', 'false') }}" aria-controls="meetingMenu">
+          <i class="link-icon" data-lucide="calendar-check"></i>
+          <span class="link-title">Presensi & Rapat</span>
+          <i class="link-arrow" data-lucide="chevron-down"></i>
+        </a>
+        <div class="collapse {{ active_class(['admin/meetings*', 'admin/attendance/report*'], 'show') }}" id="meetingMenu">
+          <ul class="nav sub-menu">
+            <li class="nav-item">
+              <a href="{{ route('admin.meetings.index') }}" class="nav-link {{ active_class(['admin/meetings']) }}">Daftar Kegiatan</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('admin.meetings.create') }}" class="nav-link {{ active_class(['admin/meetings/create']) }}">Buat Agenda</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('admin.attendance.report') }}" class="nav-link {{ active_class(['admin/attendance/report']) }}">Laporan Presensi</a>
+            </li>
+          </ul>
+        </div>
+      </li>
       
       @if(auth()->user()?->hasRole(['admin', 'bph']))
       <li class="nav-item {{ active_class(['admin/blogs*', 'admin/blog-categories*']) }}">

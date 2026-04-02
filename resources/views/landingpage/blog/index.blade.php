@@ -1,162 +1,145 @@
-@extends('landingpage.layout.master')
+@extends('landingpage.layout.blog')
 
-@section('title', 'Blog - HIMATIF')
+@section('css')
+    <link href="{{ asset('assets/landing/css/module-css/blog-sidebar.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/landing/css/module-css/subscribe.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/landing/css/module-css/page-title.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/landing/css/module-css/news.css') }}" rel="stylesheet">
+@endsection
 
 @section('content')
-<!-- Page Title -->
-<section class="page-title centred">
-    <div class="bg-layer" style="background-image: url({{ asset('assets/landing/images/background/page-title.jpg') }});"></div>
-    <div class="auto-container">
-        <div class="content-box">
-            <h2>Blog & News</h2>
-            <ul class="bread-crumb clearfix">
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li>Blog</li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- Sidebar Page Container -->
-<section class="sidebar-page-container pt-110 pb-120">
-    <div class="auto-container">
-        <div class="row clearfix">
-            <!-- Sidebar -->
-            <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">
-                <div class="blog-sidebar mr-40 mb-30">
-                    <!-- Search Widget -->
-                    <div class="search-widget mb-60">
-                        <div class="search-form">
-                            <form method="get" action="{{ route('blog.index') }}">
-                                <div class="form-group">
-                                    <input type="search" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                    <button type="submit"><i class="icon-1"></i></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Categories Widget -->
-                    <div class="sidebar-widget category-widget mb-50">
-                        <div class="widget-title mb-11">
-                            <h3>Categories</h3>
-                        </div>
-                        <div class="widget-content">
-                            <ul class="category-list clearfix">
-                                <li>
-                                    <a href="{{ route('blog.index') }}" class="{{ !request('category') ? 'active' : '' }}">
-                                        All Posts<span>({{ \App\Models\Blog::published()->count() }})</span>
-                                    </a>
-                                </li>
-                                @foreach($categories as $category)
-                                <li>
-                                    <a href="{{ route('blog.index', ['category' => $category->slug]) }}" class="{{ request('category') == $category->slug ? 'active' : '' }}">
-                                        {{ $category->name }}<span>({{ $category->active_blogs_count }})</span>
-                                    </a>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Recent Posts Widget -->
-                    <div class="sidebar-widget post-widget mb-60">
-                        <div class="widget-title mb-20">
-                            <h3>Latest Posts</h3>
-                        </div>
-                        <div class="post-inner">
-                            @foreach($recentPosts as $recentPost)
-                            <div class="post">
-                                @if($recentPost->featured_image)
-                                <figure class="post-thumb">
-                                    <a href="{{ route('blog.show', $recentPost->slug) }}">
-                                        <img src="{{ asset('storage/' . $recentPost->featured_image) }}" alt="{{ $recentPost->title }}">
-                                    </a>
-                                </figure>
-                                @endif
-                                <h6><a href="{{ route('blog.show', $recentPost->slug') }}">{{ Str::limit($recentPost->title, 50) }}</a></h6>
-                                <span class="post-date">{{ $recentPost->formatted_date }}</span>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+    <!-- page-title -->
+    <section class="page-title centred pt_110">
+        <div class="auto-container">
+            <div class="content-box">
+                <h1>Blog</h1>
+                <ul class="bread-crumb clearfix">
+                    <li><a href="{{ route('home') }}">Home</a></li>
+                    <li>-</li>
+                    <li>Blog</li>
+                </ul>
+                <div class="mt-4">
+                    <a href="{{ route('home') }}" class="theme-btn btn-one">Back to Home</a>
                 </div>
             </div>
+        </div>
+    </section>
+    <!-- page-title end -->
 
-            <!-- Content Side -->
-            <div class="col-lg-8 col-md-12 col-sm-12 content-side">
-                <div class="blog-grid-content">
-                    <div class="row clearfix">
-                        @forelse($blogs as $blog)
-                        <div class="col-lg-6 col-md-6 col-sm-12 news-block">
-                            <div class="news-block-two wow fadeInUp animated" data-wow-delay="00ms" data-wow-duration="1500ms">
-                                <div class="inner-box">
-                                    @if($blog->featured_image)
-                                    <figure class="image-box">
-                                        <a href="{{ route('blog.show', $blog->slug) }}">
-                                            <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}">
-                                        </a>
-                                    </figure>
-                                    @endif
-                                    <div class="lower-content">
-                                        @if($blog->category)
-                                        <span class="post-category">{{ $blog->category->name }}</span>
-                                        @endif
-                                        <h3><a href="{{ route('blog.show', $blog->slug') }}">{{ $blog->title }}</a></h3>
-                                        <p>{{ Str::limit($blog->excerpt, 100) }}</p>
-                                        <div class="post-info clearfix">
-                                            <div class="left-side">
-                                                <span class="post-date"><i class="icon-27"></i>{{ $blog->formatted_date }}</span>
+
+    <!-- sidebar-page-container -->
+    <section class="sidebar-page-container p_relative pt_110 pb_120">
+        <div class="auto-container">
+            <div class="row clearfix">
+                <!-- Sidebar -->
+                <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">
+                    <div class="blog-sidebar mr_40 mb_30">
+                        <div class="search-widget mb_60">
+                            <div class="search-form">
+                                <form method="get" action="{{ route('blog.index') }}">
+                                    <div class="form-group">
+                                        <input type="search" name="search" placeholder="Search" value="{{ request('search') }}" required>
+                                        <button type="submit"><i class="icon-1"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="sidebar-widget category-widget mb_50">
+                            <div class="widget-title mb_11">
+                                <h3>Categories</h3>
+                            </div>
+                            <div class="widget-content">
+                                <ul class="category-list clearfix">
+                                    @foreach($categories as $category)
+                                        <li>
+                                            <a href="{{ route('blog.index', ['category' => $category->slug]) }}"
+                                               class="{{ request('category') == $category->slug ? 'active' : '' }}">
+                                                {{ $category->name }}<span>({{ $category->active_blogs_count }})</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="sidebar-widget post-widget mb_60">
+                            <div class="widget-title mb_20">
+                                <h3>Latest Posts</h3>
+                            </div>
+                            <div class="post-inner">
+                                @foreach($recentPosts as $post)
+                                    <div class="post">
+                                        <figure class="post-thumb">
+                                            <a href="{{ route('blog.show', $post->slug) }}">
+                                                <img src="{{ $post->featured_image ? asset('storage/' . $post->featured_image) : asset('assets/landing/images/news/post-1.jpg') }}" alt="{{ $post->title }}">
+                                            </a>
+                                        </figure>
+                                        <h6><a href="{{ route('blog.show', $post->slug) }}">{{ Str::limit($post->title, 40) }}</a></h6>
+                                        <span class="post-date">{{ $post->published_at ? $post->published_at->format('d M Y') : $post->created_at->format('d M Y') }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        {{--
+                        <div class="sidebar-widget tags-widget mb_45">
+                            <div class="widget-title mb_20">
+                                <h3>Popular tag</h3>
+                            </div>
+                            <div class="widget-content">
+                                <ul class="tags-list clearfix">
+                                    <li><a href="blog-details.html">Account</a></li>
+                                    <li><a href="blog-details.html">Careers</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        --}}
+                    </div>
+                </div>
+
+                <!-- Content Side -->
+                <div class="col-lg-8 col-md-12 col-sm-12 content-side">
+                    <div class="blog-grid-content">
+                        <div class="row clearfix">
+                            @forelse($blogs as $blog)
+                                <div class="col-lg-6 col-md-6 col-sm-12 news-block">
+                                    <div class="news-block-two wow fadeInUp animated" data-wow-delay="00ms" data-wow-duration="1500ms">
+                                        <div class="inner-box">
+                                            <div class="image-box">
+                                                <figure class="image">
+                                                    <a href="{{ route('blog.show', $blog->slug) }}">
+                                                        <img src="{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('assets/landing/images/news/news-4.jpg') }}" alt="{{ $blog->title }}" style="height: 250px; object-fit: cover;">
+                                                    </a>
+                                                </figure>
+                                                <figure class="overlay-image">
+                                                    <a href="{{ route('blog.show', $blog->slug) }}">
+                                                        <img src="{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('assets/landing/images/news/news-4.jpg') }}" alt="{{ $blog->title }}" style="height: 250px; object-fit: cover;">
+                                                    </a>
+                                                </figure>
                                             </div>
-                                            <div class="right-side">
-                                                <a href="{{ route('blog.show', $blog->slug') }}">Read More<i class="icon-7"></i></a>
+                                            <div class="lower-content">
+                                                <span class="category">{{ $blog->category->name ?? 'Uncategorized' }}</span>
+                                                <h3><a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a></h3>
+                                                <ul class="post-info">
+                                                    <li>By <a href="#">{{ $blog->author->name ?? 'Admin' }}</a></li>
+                                                    <li><span>{{ $blog->published_at ? $blog->published_at->format('F d, Y') : $blog->created_at->format('F d, Y') }}</span></li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @empty
+                                <div class="col-12">
+                                    <div class="alert alert-info">No blogs found.</div>
+                                </div>
+                            @endforelse
                         </div>
-                        @empty
-                        <div class="col-12">
-                            <div class="alert alert-info text-center">
-                                No blog posts found{{ request('search') ? ' for "' . request('search') . '"' : '' }}.
-                            </div>
+
+                        <div class="pagination-wrapper">
+                            {{ $blogs->links('pagination::bootstrap-4') }}
                         </div>
-                        @endforelse
                     </div>
-
-                    <!-- Pagination -->
-                    @if($blogs->hasPages())
-                    <div class="pagination-wrapper centred pt-30">
-                        <ul class="pagination clearfix">
-                            {{-- Previous Page Link --}}
-                            @if ($blogs->onFirstPage())
-                                <li class="disabled"><span><i class="icon-44"></i></span></li>
-                            @else
-                                <li><a href="{{ $blogs->previousPageUrl() }}"><i class="icon-44"></i></a></li>
-                            @endif
-
-                            {{-- Pagination Elements --}}
-                            @foreach ($blogs->getUrlRange(1, $blogs->lastPage()) as $page => $url)
-                                @if ($page == $blogs->currentPage())
-                                    <li><a href="{{ $url }}" class="current">{{ $page }}</a></li>
-                                @else
-                                    <li><a href="{{ $url }}">{{ $page }}</a></li>
-                                @endif
-                            @endforeach
-
-                            {{-- Next Page Link --}}
-                            @if ($blogs->hasMorePages())
-                                <li><a href="{{ $blogs->nextPageUrl() }}"><i class="icon-45"></i></a></li>
-                            @else
-                                <li class="disabled"><span><i class="icon-45"></i></span></li>
-                            @endif
-                        </ul>
-                    </div>
-                    @endif
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+    <!-- sidebar-page-container end -->
 @endsection

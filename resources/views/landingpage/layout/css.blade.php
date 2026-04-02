@@ -33,4 +33,6 @@
 <link href="{{ asset('assets/landing/css/responsive.css') }}" rel="stylesheet">
 
 
+
+
 @yield('css')

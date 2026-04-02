@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\LandingPageBlogController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\MeetingController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Admin\AttendanceReportController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -93,6 +96,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // QR Check-in
+    Route::get('/presensi/{token}', [AttendanceController::class, 'showCheckinForm'])->name('attendance.checkin.show');
+    Route::post('/presensi/{token}', [AttendanceController::class, 'submitCheckin'])->name('attendance.checkin.store');
 });
 
 Route::bind('member', function ($value) {
@@ -113,6 +120,16 @@ Route::prefix('admin')
         Route::resource('roles', RoleController::class)->except(['show']);
         Route::resource('permissions', PermissionController::class)->except(['show', 'create']);
         Route::resource('divisions', DivisionController::class)->except(['show']);
+        
+        // Manajemen Meeting
+        Route::resource('meetings', MeetingController::class);
+        
+        // Manajemen Presensi Manual per Meeting
+        Route::get('meetings/{meeting}/attendance', [MeetingController::class, 'attendanceForm'])->name('meetings.attendance');
+        Route::post('meetings/{meeting}/attendance', [MeetingController::class, 'storeAttendance'])->name('meetings.attendance.store');
+
+        // Laporan / Rekap
+        Route::get('attendance/report', [AttendanceReportController::class, 'index'])->name('attendance.report');
     });
 
 Route::prefix('admin')
