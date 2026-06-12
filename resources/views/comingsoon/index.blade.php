@@ -1,4 +1,4 @@
-@extends('layout_landingpage.comingsoon')
+@extends('landingpage.templates.comingsoon')
 
 @section('css')
 <link href="{{ asset('assets/landing/css/style.css') }}" rel="stylesheet">

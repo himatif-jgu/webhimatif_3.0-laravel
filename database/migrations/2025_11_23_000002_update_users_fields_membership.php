@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'nim')) {
-                $table->renameColumn('nim', 'student_number');
+                $table->renameColumn('nim', 'npm');
             }
             if (Schema::hasColumn('users', 'angkatan')) {
                 $table->renameColumn('angkatan', 'batch_year');
@@ -32,17 +32,23 @@ return new class extends Migration
                 $table->string('phone')->nullable()->after('batch_year');
             }
 
-            $table->string('instagram_url')->nullable()->after('phone');
-            $table->string('linkedin_url')->nullable()->after('instagram_url');
-            $table->string('website_url')->nullable()->after('linkedin_url');
+            if (! Schema::hasColumn('users', 'instagram_url')) {
+                $table->string('instagram_url')->nullable()->after('phone');
+            }
+            if (! Schema::hasColumn('users', 'linkedin_url')) {
+                $table->string('linkedin_url')->nullable()->after('instagram_url');
+            }
+            if (! Schema::hasColumn('users', 'website_url')) {
+                $table->string('website_url')->nullable()->after('linkedin_url');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'student_number')) {
-                $table->renameColumn('student_number', 'nim');
+            if (Schema::hasColumn('users', 'npm')) {
+                $table->renameColumn('npm', 'nim');
             }
             if (Schema::hasColumn('users', 'batch_year')) {
                 $table->renameColumn('batch_year', 'angkatan');

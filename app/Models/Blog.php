@@ -69,9 +69,9 @@ class Blog extends Model
             ->where('published_at', '<=', now());
     }
 
-    public function scopeLatest($query)
+    public function scopeLatest($query, string $column = 'published_at')
     {
-        return $query->orderBy('published_at', 'desc');
+        return $query->orderBy($column, 'desc');
     }
 
     public function scopePopular($query)

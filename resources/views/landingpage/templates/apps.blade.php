@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>Himatif Apps</title>
+
+    <!-- Fav Icon -->
+    <link rel="icon" href="{{ asset('assets/landing/images/logo-himatif.png') }}" type="image/x-icon">
+    @include('landingpage.organisms.asset-styles')
+</head>
+
+<body>
+    <!-- Header Section -->
+
+    @include('landingpage.organisms.compact-header')
+
+    <!-- Content Section -->
+    <main>
+        @yield('content')
+    </main>
+
+    @include('landingpage.atoms.back-home-link')
+    <!-- Footer Section -->
+    <footer>
+        @include('landingpage.organisms.site-footer')
+    </footer>
+    @include('landingpage.organisms.asset-scripts')
+    <script>
+        // Custom scripts can go here
+    </script>
+</body>
+
+</html>

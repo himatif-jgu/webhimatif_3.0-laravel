@@ -1,17 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\BlogCategoryController;
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\DivisionController;
-use App\Http\Controllers\Admin\MemberController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\AttendanceCheckInController;
 use App\Http\Controllers\LandingPageBlogController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\MeetingController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\Admin\AttendanceReportController;
-use App\Models\User;
+use App\Http\Controllers\QrCodeSvgController;
+use App\Http\Controllers\ShortUrlRedirectController;
+use App\Models\ContactInformation;
+use App\Models\FoundationContent;
+use App\Models\HistoryEntry;
+use App\Models\LandingContent;
+use App\Models\LeadershipMember;
+use App\Models\TeamUnit;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,21 +18,57 @@ Route::get('/', function () {
         ->latest('published_at')
         ->limit(3)
         ->get();
+
+    $landingContents = LandingContent::active()
+        ->orderBy('section')
+        ->orderBy('sort_order')
+        ->get()
+        ->keyBy('key');
+    $historyEntries = HistoryEntry::active()->get()->groupBy('type');
+    $foundationContents = FoundationContent::active()->get();
+    $teamUnits = TeamUnit::active()->get();
+    $leadershipMembers = LeadershipMember::active()->get();
+    $contactInformation = ContactInformation::active()->get();
     
-    return view('home', compact('latestBlogs'));
+    return view('landingpage.pages.home', compact(
+        'latestBlogs',
+        'landingContents',
+        'historyEntries',
+        'foundationContents',
+        'teamUnits',
+        'leadershipMembers',
+        'contactInformation',
+    ));
 })->name('home');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/team/{teamUnit:slug}', function (TeamUnit $teamUnit) {
+    abort_unless($teamUnit->is_active, 404);
+
+    return view('landingpage.pages.team.show', compact('teamUnit'));
+})->name('team.show');
+
+Route::get('/attendance/{token}', [AttendanceCheckInController::class, 'show'])
+    ->name('attendance.check-in');
+Route::get('/attendance/{token}/qr.svg', [AttendanceCheckInController::class, 'qr'])
+    ->name('attendance.qr');
+Route::post('/attendance/{token}', [AttendanceCheckInController::class, 'store'])
+    ->name('attendance.check-in.store');
+
+Route::get('/s/{code}', ShortUrlRedirectController::class)
+    ->where('code', '[A-Za-z0-9-]+')
+    ->name('short-urls.redirect');
+
+Route::get('/qr/{token}.svg', QrCodeSvgController::class)
+    ->where('token', '[A-Za-z0-9]+')
+    ->name('qr-codes.svg');
 
 Route::prefix('foundation')->group(function () {
     Route::get('/vision', function () {
-        return view(view: 'foundation.vision');
+        return view('landingpage.pages.foundation.vision');
     })->name('foundation.vision');
 
     Route::get('/mission', function () {
-        return view('foundation.mission');
+        return view('landingpage.pages.foundation.mission');
     })->name('foundation.mission');
 });
 
@@ -70,14 +104,14 @@ Route::get('/comingsoon', function () {
 
 Route::prefix('apps')->group(function () {
     Route::get('/spin-wheel', function () {
-        return view('apps.spin_wheel.index');
+        return view('landingpage.pages.apps.spin_wheel.index');
     })->name('spin_wheel');
 
     Route::get('/split-bill', function () {
-        return view('apps.split_bill.index');
+        return view('landingpage.pages.apps.split_bill.index');
     })->name('splitify');
     Route::get('/cek-khodam', function () {
-        return view('apps.cek_khodam.index');
+        return view('landingpage.pages.apps.cek_khodam.index');
     })->name('cek_khodam');
 });
 
@@ -86,58 +120,5 @@ Route::prefix('blog')->name('blog.')->group(function () {
     Route::get('/{slug}', [LandingPageBlogController::class, 'show'])->name('show');
 });
 
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // QR Check-in
-    Route::get('/presensi/{token}', [AttendanceController::class, 'showCheckinForm'])->name('attendance.checkin.show');
-    Route::post('/presensi/{token}', [AttendanceController::class, 'submitCheckin'])->name('attendance.checkin.store');
-});
-
-Route::bind('member', function ($value) {
-    try {
-        $id = decrypt($value);
-    } catch (\Exception $e) {
-        abort(404);
-    }
-    return User::findOrFail($id);
-});
-
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'role:admin'])
-    ->group(function () {
-        Route::patch('members/{member}/toggle-active', [MemberController::class, 'toggleActive'])->name('members.toggle-active');
-        Route::resource('members', MemberController::class);
-        Route::resource('roles', RoleController::class)->except(['show']);
-        Route::resource('permissions', PermissionController::class)->except(['show', 'create']);
-        Route::resource('divisions', DivisionController::class)->except(['show']);
-        
-        // Manajemen Meeting
-        Route::resource('meetings', MeetingController::class);
-        
-        // Manajemen Presensi Manual per Meeting
-        Route::get('meetings/{meeting}/attendance', [MeetingController::class, 'attendanceForm'])->name('meetings.attendance');
-        Route::post('meetings/{meeting}/attendance', [MeetingController::class, 'storeAttendance'])->name('meetings.attendance.store');
-
-        // Laporan / Rekap
-        Route::get('attendance/report', [AttendanceReportController::class, 'index'])->name('attendance.report');
-    });
-
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'role:admin|bph'])
-    ->group(function () {
-        Route::resource('blogs', BlogController::class)->except(['show']);
-        Route::resource('blog-categories', BlogCategoryController::class)->except(['show']);
-    });
 
 require __DIR__.'/auth.php';

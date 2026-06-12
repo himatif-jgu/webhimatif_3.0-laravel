@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->unique()->nullable()->after('name');
-            $table->string('nim')->unique()->nullable()->after('username');
-            $table->unsignedSmallInteger('angkatan')->nullable()->after('nim');
-            $table->string('kelas')->nullable()->after('angkatan');
-            $table->string('prodi')->default('Teknik Informatika')->after('kelas');
-            $table->string('phone')->nullable()->after('prodi');
-            $table->string('whatsapp_number')->nullable()->after('phone');
-            $table->string('membership_status')->default('non_member')->after('whatsapp_number');
-            $table->boolean('is_active')->default(true)->after('membership_status');
+            $table->string('npm')->unique()->nullable()->after('username');
+            $table->unsignedSmallInteger('batch_year')->nullable()->after('npm');
+            $table->string('phone')->nullable()->after('batch_year');
+            $table->boolean('is_active')->default(true)->after('phone');
             $table->string('avatar')->nullable()->after('is_active');
             $table->string('gender')->nullable()->after('avatar');
             $table->date('birth_date')->nullable()->after('gender');
@@ -39,13 +35,9 @@ return new class extends Migration
             $table->dropSoftDeletes();
             $table->dropColumn([
                 'username',
-                'nim',
-                'angkatan',
-                'kelas',
-                'prodi',
+                'npm',
+                'batch_year',
                 'phone',
-                'whatsapp_number',
-                'membership_status',
                 'is_active',
                 'avatar',
                 'gender',

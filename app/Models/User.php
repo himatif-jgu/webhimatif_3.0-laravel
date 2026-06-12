@@ -3,13 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, SoftDeletes;
@@ -22,8 +26,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
-        'student_number',
+        'npm',
         'batch_year',
+        'team_unit_id',
         'phone',
         'is_active',
         'avatar',
@@ -34,7 +39,6 @@ class User extends Authenticatable
         'instagram_url',
         'linkedin_url',
         'website_url',
-        'division_id',
         'email',
         'password',
         'last_seen_at',
@@ -66,24 +70,50 @@ class User extends Authenticatable
         ];
     }
 
-    public function division()
-    {
-        return $this->belongsTo(Division::class);
-    }
-
-    public function socialMedia()
-    {
-        return $this->hasMany(SocialMedia::class)->orderBy('order');
-    }
-
     public function isAdmin(): bool
     {
         return $this->hasRole('admin');
     }
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $panel->getId() === 'app'
+            && $this->isActive()
+            && $this->hasAnyRole([
+                'admin',
+                'ketua',
+                'wakil_ketua',
+                'sekretaris',
+                'sekretaris_1',
+                'sekretaris_2',
+                'bendahara',
+                'bendahara_1',
+                'bendahara_2',
+                'ketua_departemen',
+                'wakil_ketua_departemen',
+                'anggota_divisi',
+                'dosen',
+            ]);
+    }
+
     public function isActive(): bool
     {
         return (bool) $this->is_active;
+    }
+
+    public function assignedAttendanceEvents(): HasMany
+    {
+        return $this->hasMany(AttendanceEvent::class, 'assigned_to');
+    }
+
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
+
+    public function teamUnit(): BelongsTo
+    {
+        return $this->belongsTo(TeamUnit::class);
     }
 
     /**

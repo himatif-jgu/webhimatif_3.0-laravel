@@ -38,7 +38,7 @@ class LandingPageBlogController extends Controller
             ->limit(3)
             ->get();
 
-        return view('landingpage.blog.index', compact('blogs', 'categories', 'recentPosts'));
+        return view('landingpage.pages.blog.index', compact('blogs', 'categories', 'recentPosts'));
     }
 
     public function show($slug)
@@ -67,6 +67,6 @@ class LandingPageBlogController extends Controller
             ->limit(3)
             ->get();
 
-        return view('landingpage.blog.show', compact('blog', 'relatedBlogs', 'categories', 'recentPosts'));
+        return view('landingpage.pages.blog.show', compact('blog', 'relatedBlogs', 'categories', 'recentPosts'));
     }
 }

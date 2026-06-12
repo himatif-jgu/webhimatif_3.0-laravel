@@ -1,4 +1,4 @@
-@extends('landingpage.layout.master_error')
+@extends('landingpage.templates.error')
 
 @section('css')
 <link href="{{ asset('assets/landing/css/style.css') }}" rel="stylesheet">
