@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\ContactInformationResource\Pages\CreateContactInformation;
 use App\Filament\Resources\ContactInformationResource\Pages\EditContactInformation;
 use App\Filament\Resources\ContactInformationResource\Pages\ListContactInformation;
@@ -27,6 +28,8 @@ use Filament\Tables\Table;
 
 class ContactInformationResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = ContactInformation::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-phone';

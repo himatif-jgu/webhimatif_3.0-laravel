@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\LandingContentResource\Pages\CreateLandingContent;
 use App\Filament\Resources\LandingContentResource\Pages\EditLandingContent;
 use App\Filament\Resources\LandingContentResource\Pages\ListLandingContents;
@@ -28,6 +29,8 @@ use Filament\Tables\Table;
 
 class LandingContentResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = LandingContent::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-group';

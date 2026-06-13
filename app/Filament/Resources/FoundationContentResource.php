@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\FoundationContentResource\Pages\CreateFoundationContent;
 use App\Filament\Resources\FoundationContentResource\Pages\EditFoundationContent;
 use App\Filament\Resources\FoundationContentResource\Pages\ListFoundationContents;
@@ -28,6 +29,8 @@ use Filament\Tables\Table;
 
 class FoundationContentResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = FoundationContent::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-flag';

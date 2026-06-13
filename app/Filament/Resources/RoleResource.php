@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\AdminOnlyResourceAccess;
 use App\Filament\Resources\RoleResource\Pages\CreateRole;
 use App\Filament\Resources\RoleResource\Pages\EditRole;
 use App\Filament\Resources\RoleResource\Pages\ListRoles;
@@ -21,6 +22,8 @@ use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
+    use AdminOnlyResourceAccess;
+
     protected static ?string $model = Role::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';

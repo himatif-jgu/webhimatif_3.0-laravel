@@ -38,7 +38,11 @@ class UserImporter extends Importer
                 ->sensitive()
                 ->example('Himatif@2026')
                 ->rules(['nullable', 'min:8', 'max:255'])
-                ->fillRecordUsing(fn (): null => null),
+                ->fillRecordUsing(function (User $record, mixed $state): void {
+                    if (filled($state)) {
+                        $record->password = $state;
+                    }
+                }),
             ImportColumn::make('roles')
                 ->example('anggota_divisi')
                 ->helperText('Pisahkan banyak role dengan koma. Contoh: anggota_divisi,sekretaris_1')
@@ -124,6 +128,13 @@ class UserImporter extends Importer
 
         if ($teamUnit) {
             $this->data['team_unit_id'] = $teamUnit->id;
+        }
+    }
+
+    protected function beforeSave(): void
+    {
+        if (! $this->record->exists && blank($this->record->password)) {
+            $this->record->password = Hash::make('Himatif@2026');
         }
     }
 

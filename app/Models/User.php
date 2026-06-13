@@ -12,6 +12,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Traits\HasRoles;
+use Throwable;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -93,6 +94,7 @@ class User extends Authenticatable implements FilamentUser
                 'ketua_departemen',
                 'wakil_ketua_departemen',
                 'anggota_divisi',
+                'cms_manager',
                 'dosen',
             ]);
     }
@@ -117,12 +119,22 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(TeamUnit::class);
     }
 
-    /**
-     * Encrypt route key to avoid exposing sequential IDs in URLs.
-     */
     public function getRouteKey()
     {
-        return encrypt($this->getKey());
+        return parent::getRouteKey();
+    }
+
+    public function resolveRouteBindingQuery($query, $value, $field = null)
+    {
+        if ($field === null || $field === $this->getRouteKeyName()) {
+            try {
+                $value = decrypt($value);
+            } catch (Throwable) {
+                // Keep supporting plain numeric IDs for internal links and tests.
+            }
+        }
+
+        return parent::resolveRouteBindingQuery($query, $value, $field);
     }
 
     public function isOnline(): bool

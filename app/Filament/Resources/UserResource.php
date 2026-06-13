@@ -273,6 +273,7 @@ class UserResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
+                        ->authorizeIndividualRecords(fn (User $record): bool => self::canDelete($record))
                         ->visible(fn (): bool => self::canDeleteAny()),
                 ])->visible(fn (): bool => self::canDeleteAny()),
             ]);
@@ -281,18 +282,18 @@ class UserResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        $user = auth()->user();
 
-        if (! $user || $user->isAdmin()) {
-            return $query;
-        }
+        return $query;
+    }
 
-        return $query->whereKey($user->id);
+    public static function shouldRegisterNavigation(): bool
+    {
+        return (bool) auth()->user()?->isAdmin();
     }
 
     public static function canViewAny(): bool
     {
-        return auth()->check();
+        return (bool) auth()->user()?->isAdmin();
     }
 
     public static function canCreate(): bool
@@ -302,12 +303,12 @@ class UserResource extends Resource
 
     public static function canView(Model $record): bool
     {
-        return $record instanceof User && self::canManageProfile($record);
+        return $record instanceof User && (bool) auth()->user()?->isAdmin();
     }
 
     public static function canEdit(Model $record): bool
     {
-        return $record instanceof User && self::canManageProfile($record);
+        return $record instanceof User && (bool) auth()->user()?->isAdmin();
     }
 
     public static function canDelete(Model $record): bool

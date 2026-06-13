@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\AdminOnlyResourceAccess;
 use App\Filament\Resources\PermissionResource\Pages\CreatePermission;
 use App\Filament\Resources\PermissionResource\Pages\EditPermission;
 use App\Filament\Resources\PermissionResource\Pages\ListPermissions;
@@ -20,6 +21,8 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionResource extends Resource
 {
+    use AdminOnlyResourceAccess;
+
     protected static ?string $model = Permission::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-key';

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\LeadershipMemberResource\Pages\CreateLeadershipMember;
 use App\Filament\Resources\LeadershipMemberResource\Pages\EditLeadershipMember;
 use App\Filament\Resources\LeadershipMemberResource\Pages\ListLeadershipMembers;
@@ -24,6 +25,8 @@ use Filament\Tables\Table;
 
 class LeadershipMemberResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = LeadershipMember::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';

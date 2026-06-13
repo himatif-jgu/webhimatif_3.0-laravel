@@ -29,6 +29,7 @@ class AdminAccessSeeder extends Seeder
             'ketua_departemen',
             'wakil_ketua_departemen',
             'anggota_divisi',
+            'cms_manager',
             'dosen',
         ];
 
@@ -91,6 +92,13 @@ class AdminAccessSeeder extends Seeder
         }
 
         Role::findByName('admin')->syncPermissions($permissions);
+        Role::findByName('cms_manager')->syncPermissions([
+            'app.access',
+            'cms.view',
+            'cms.create',
+            'cms.update',
+            'cms.delete',
+        ]);
 
         $admin = User::updateOrCreate(
             ['email' => self::ADMIN_EMAIL],

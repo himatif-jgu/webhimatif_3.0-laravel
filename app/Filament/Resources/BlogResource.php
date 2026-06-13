@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\BlogResource\Pages\CreateBlog;
 use App\Filament\Resources\BlogResource\Pages\EditBlog;
 use App\Filament\Resources\BlogResource\Pages\ListBlogs;
@@ -29,6 +30,8 @@ use Filament\Tables\Table;
 
 class BlogResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = Blog::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-newspaper';

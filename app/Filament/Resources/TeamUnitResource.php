@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\TeamUnitResource\Pages\CreateTeamUnit;
 use App\Filament\Resources\TeamUnitResource\Pages\EditTeamUnit;
 use App\Filament\Resources\TeamUnitResource\Pages\ListTeamUnits;
@@ -25,6 +26,8 @@ use Filament\Tables\Table;
 
 class TeamUnitResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = TeamUnit::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';

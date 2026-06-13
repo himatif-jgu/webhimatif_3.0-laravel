@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\HistoryEntryResource\Pages\CreateHistoryEntry;
 use App\Filament\Resources\HistoryEntryResource\Pages\EditHistoryEntry;
 use App\Filament\Resources\HistoryEntryResource\Pages\ListHistoryEntries;
@@ -25,6 +26,8 @@ use Filament\Tables\Table;
 
 class HistoryEntryResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = HistoryEntry::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clock';

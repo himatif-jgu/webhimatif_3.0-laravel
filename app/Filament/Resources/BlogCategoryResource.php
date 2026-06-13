@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\CmsResourceAccess;
 use App\Filament\Resources\BlogCategoryResource\Pages\CreateBlogCategory;
 use App\Filament\Resources\BlogCategoryResource\Pages\EditBlogCategory;
 use App\Filament\Resources\BlogCategoryResource\Pages\ListBlogCategories;
@@ -23,6 +24,8 @@ use Filament\Tables\Table;
 
 class BlogCategoryResource extends Resource
 {
+    use CmsResourceAccess;
+
     protected static ?string $model = BlogCategory::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
