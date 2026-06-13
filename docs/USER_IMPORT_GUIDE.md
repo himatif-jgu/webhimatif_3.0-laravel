@@ -4,9 +4,16 @@ Fitur import user tersedia di `App > Access Control > Users`.
 
 ## Format File
 
-Gunakan file CSV. File ini bisa dibuka dan diedit lewat Microsoft Excel atau Google Sheets.
+Import sistem memakai file CSV karena fitur import bawaan Filament paling stabil untuk format itu.
 
-Klik tombol `Download CSV Template` di halaman Users, isi datanya, lalu upload lewat tombol `Import Users`.
+Alur yang disarankan:
+
+1. Klik `Download Excel Template` di halaman Users.
+2. Isi data user di Microsoft Excel.
+3. Simpan dengan `Save As > CSV UTF-8`.
+4. Upload file CSV lewat tombol `Import Users`.
+
+Alternatif: klik `Download CSV Template`, isi langsung di Excel/Google Sheets, lalu simpan sebagai CSV UTF-8.
 
 ## Kolom Template
 

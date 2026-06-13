@@ -144,7 +144,7 @@ class UserImporter extends Importer
             return;
         }
 
-        $this->record->syncRoles($this->data['roles']);
+        $this->record->syncRoles($this->roleArray($this->data['roles']));
     }
 
     public static function getCompletedNotificationBody(Import $import): string
@@ -181,6 +181,18 @@ class UserImporter extends Importer
             ->lower()
             ->replace([' ', '-'], '_')
             ->toString();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function roleArray(string $roles): array
+    {
+        return collect(explode(',', $roles))
+            ->map(fn (string $role): string => trim($role))
+            ->filter()
+            ->values()
+            ->all();
     }
 
     private static function rolesExistRule(): callable

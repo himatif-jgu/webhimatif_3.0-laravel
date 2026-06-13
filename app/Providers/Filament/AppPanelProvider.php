@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\AppLogin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,7 +32,7 @@ class AppPanelProvider extends PanelProvider
             ->brandLogo(asset('assets/landing/images/logo-himatif.png'))
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('assets/landing/images/logo-himatif.png'))
-            ->login()
+            ->login(AppLogin::class)
             ->profile(isSimple: false)
             ->colors([
                 'primary' => Color::Amber,

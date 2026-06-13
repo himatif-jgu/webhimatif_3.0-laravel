@@ -40,6 +40,7 @@ class User extends Authenticatable implements FilamentUser
         'linkedin_url',
         'website_url',
         'email',
+        'google_id',
         'password',
         'last_seen_at',
     ];
