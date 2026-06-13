@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Role;
 
 class AdminAccessSeeder extends Seeder
 {
-    public const ADMIN_EMAIL = 'admin@himatif-jgu.ac.id';
+    public const ADMIN_EMAIL = 'himatif.19@jgu.ac.id';
 
     public const ADMIN_PASSWORD = 'AdminHimatif@2026';
 
