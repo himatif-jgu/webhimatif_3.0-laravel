@@ -101,6 +101,29 @@
             border-radius: 12px;
         }
 
+        .himatif-login-form :is(label, .fi-fo-field-wrp-label, .fi-fo-field-wrp-label span) {
+            color: #0f172a;
+        }
+
+        .himatif-login-form :is(.fi-input, input, textarea, select) {
+            color: #0f172a;
+            caret-color: #f59e0b;
+        }
+
+        .himatif-login-form :is(.fi-input::placeholder, input::placeholder, textarea::placeholder) {
+            color: #94a3b8;
+            opacity: 1;
+        }
+
+        .himatif-login-form :is(.fi-checkbox-input, input[type="checkbox"]) {
+            border-color: #cbd5e1;
+            background-color: #fff;
+        }
+
+        .himatif-login-form :is(.fi-fo-field-wrp-helper-text, .fi-fo-field-wrp-hint, .fi-link) {
+            color: #475569;
+        }
+
         .himatif-login-form .fi-btn {
             border-radius: 12px;
         }
