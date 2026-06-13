@@ -8,6 +8,10 @@
             width: 100%;
         }
 
+        .fi-simple-header {
+            display: none;
+        }
+
         .himatif-login-page {
             min-height: calc(100vh - 3rem);
             display: grid;
@@ -101,12 +105,24 @@
             border-radius: 12px;
         }
 
-        .himatif-login-form :is(label, .fi-fo-field-wrp-label, .fi-fo-field-wrp-label span) {
-            color: #0f172a;
+        .himatif-login-form :is(.fi-fo-field-label, .fi-fo-field-label-content, .fi-fo-field-label-content span) {
+            color: #0f172a !important;
+            opacity: 1 !important;
+        }
+
+        .himatif-login-form .fi-fo-field-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .himatif-login-form .fi-fo-field-label-required-mark {
+            color: #f97316 !important;
+            margin-left: 0.15rem;
         }
 
         .himatif-login-form :is(.fi-input, input, textarea, select) {
-            color: #0f172a;
+            color: #0f172a !important;
             caret-color: #f59e0b;
         }
 
@@ -116,12 +132,16 @@
         }
 
         .himatif-login-form :is(.fi-checkbox-input, input[type="checkbox"]) {
-            border-color: #cbd5e1;
-            background-color: #fff;
+            width: 1rem;
+            height: 1rem;
+            border-color: #94a3b8 !important;
+            background-color: #fff !important;
+            color: #f59e0b !important;
+            opacity: 1 !important;
         }
 
         .himatif-login-form :is(.fi-fo-field-wrp-helper-text, .fi-fo-field-wrp-hint, .fi-link) {
-            color: #475569;
+            color: #475569 !important;
         }
 
         .himatif-login-form .fi-btn {
