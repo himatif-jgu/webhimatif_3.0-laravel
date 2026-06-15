@@ -7,6 +7,7 @@
     $items = collect($this->getUserMenuItems());
     $logoutItem = $items->pull('logout');
     $position ??= filament()->getUserMenuPosition();
+    $avatarUrl = $user?->getFilamentAvatarUrl();
 
     $roles = $user?->roles?->pluck('name')
         ->map(fn (string $role): string => str($role)->replace('_', ' ')->title()->toString())
@@ -53,6 +54,37 @@
         color: #ffffff;
         font-size: 15px;
         font-weight: 800;
+        overflow: hidden;
+    }
+
+    .himatif-user-menu__avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .himatif-user-menu__trigger-avatar {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #111827;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 800;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .dark .himatif-user-menu__trigger-avatar {
+        background: #0f766e;
+    }
+
+    .himatif-user-menu__trigger-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .himatif-user-menu__identity {
@@ -108,12 +140,24 @@
             type="button"
             class="fi-user-menu-trigger"
         >
-            <x-filament-panels::avatar.user :user="$user" loading="lazy" />
+            <span class="himatif-user-menu__trigger-avatar">
+                @if ($avatarUrl)
+                    <img src="{{ $avatarUrl }}" alt="{{ $user?->name ?? 'HIMATIF User' }}" loading="lazy">
+                @else
+                    {{ $initials ?: 'HA' }}
+                @endif
+            </span>
         </button>
     </x-slot>
 
     <div class="himatif-user-menu__header">
-        <div class="himatif-user-menu__avatar">{{ $initials ?: 'HA' }}</div>
+        <div class="himatif-user-menu__avatar">
+            @if ($avatarUrl)
+                <img src="{{ $avatarUrl }}" alt="{{ $user?->name ?? 'HIMATIF User' }}" loading="lazy">
+            @else
+                {{ $initials ?: 'HA' }}
+            @endif
+        </div>
         <div class="himatif-user-menu__identity">
             <div class="himatif-user-menu__name">
                 <span>{{ $user?->name ?? 'HIMATIF User' }}</span>

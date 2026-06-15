@@ -60,20 +60,6 @@
         <!-- home-section -->
         <section id="home" class="banner-section p_relative centred">
             <div class="pattern-layer" style="background-image: url(assets/landing/images/shape/shape-1.png);"></div>
-            <div class="author-box">
-                <div class="author author-1"><img src="assets/landing/images/welcome/6.png"
-                        alt=""><span>SEKRETARIAT</span></div>
-                <div class="author author-2"><img src="assets/landing/images/welcome/2.png"
-                        alt=""><span>MEDINFO</span></div>
-                <div class="author author-3"><img src="assets/landing/images/welcome/3.png"
-                        alt=""><span>DANUS</span></div>
-                <div class="author author-4"><img src="assets/landing/images/welcome/4.png"
-                        alt=""><span>HUMAS</span></div>
-                <div class="author author-5"><img src="assets/landing/images/welcome/5.png"
-                        alt=""><span>PSDA</span></div>
-                <div class="author author-6"><img src="assets/landing/images/welcome/1.png"
-                        alt=""><span>RISTEK</span></div>
-            </div>
             <div class="auto-container">
                 <div class="content-box">
                     <h2>{{ $hero?->title ?? 'Himpunan Mahasiswa Teknik Informatika' }}</h2>

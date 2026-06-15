@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
@@ -90,14 +91,36 @@ class EditMyProfile extends Page
                     ->schema([
                         FileUpload::make('avatar')
                             ->label('Profile Image')
-                            ->avatar()
                             ->image()
                             ->disk('public')
                             ->directory('users/avatars')
                             ->visibility('public')
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                             ->maxSize(2048)
-                            ->helperText('JPG/PNG/WebP, max 2 MB.')
+                            ->maxFiles(1)
+                            ->imageCropAspectRatio('1:1')
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('512')
+                            ->imageResizeTargetHeight('512')
+                            ->previewable()
+                            ->openable()
+                            ->downloadable()
+                            ->deleteUploadedFileUsing(fn ($file): bool => is_string($file) && filled($file) && Storage::disk('public')->delete($file))
+                            ->getUploadedFileUsing(function (FileUpload $component, string $file): ?array {
+                                $storage = Storage::disk($component->getDiskName());
+
+                                if (! $storage->exists($file)) {
+                                    return null;
+                                }
+
+                                return [
+                                    'name' => basename($file),
+                                    'size' => $storage->size($file),
+                                    'type' => $storage->mimeType($file),
+                                    'url' => url('/storage/' . ltrim($file, '/')),
+                                ];
+                            })
+                            ->helperText('JPG/PNG/WebP, max 2 MB. Foto akan dibuat rasio 1:1 agar rapi di header.')
                             ->columnSpanFull(),
                         TextInput::make('name')
                             ->label('Full Name')
@@ -152,6 +175,8 @@ class EditMyProfile extends Page
 
         abort_unless($user, 403);
 
+        $oldAvatar = $user->avatar;
+
         $data = Arr::only($this->form->getState(), [
             'avatar',
             'name',
@@ -167,6 +192,12 @@ class EditMyProfile extends Page
         ]);
 
         $user->update($data);
+
+        if (filled($oldAvatar) && $oldAvatar !== ($data['avatar'] ?? null)) {
+            Storage::disk('public')->delete($oldAvatar);
+        }
+
+        auth()->setUser($user->refresh());
 
         Notification::make()
             ->title('Profile updated')

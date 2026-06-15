@@ -3,7 +3,7 @@
     $roles = $user?->roles?->pluck('name')
         ->map(fn (string $role): string => str($role)->replace('_', ' ')->title()->toString())
         ->implode(', ');
-    $avatar = $user?->avatar ? asset('storage/' . $user->avatar) : null;
+    $avatar = $user?->getFilamentAvatarUrl();
 @endphp
 
 <x-filament-panels::page>

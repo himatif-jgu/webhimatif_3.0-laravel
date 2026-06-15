@@ -37,6 +37,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 class UserResource extends Resource
@@ -75,11 +76,36 @@ class UserResource extends Resource
                                 ->schema([
                                     FileUpload::make('avatar')
                                         ->label('Profile Image')
-                                        ->avatar()
                                         ->image()
                                         ->disk('public')
                                         ->directory('users/avatars')
                                         ->visibility('public')
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                        ->maxSize(2048)
+                                        ->maxFiles(1)
+                                        ->imageCropAspectRatio('1:1')
+                                        ->imageResizeMode('cover')
+                                        ->imageResizeTargetWidth('512')
+                                        ->imageResizeTargetHeight('512')
+                                        ->previewable()
+                                        ->openable()
+                                        ->downloadable()
+                                        ->deleteUploadedFileUsing(fn ($file): bool => is_string($file) && filled($file) && Storage::disk('public')->delete($file))
+                                        ->getUploadedFileUsing(function (FileUpload $component, string $file): ?array {
+                                            $storage = Storage::disk($component->getDiskName());
+
+                                            if (! $storage->exists($file)) {
+                                                return null;
+                                            }
+
+                                            return [
+                                                'name' => basename($file),
+                                                'size' => $storage->size($file),
+                                                'type' => $storage->mimeType($file),
+                                                'url' => url('/storage/' . ltrim($file, '/')),
+                                            ];
+                                        })
+                                        ->helperText('JPG/PNG/WebP, max 2 MB. Foto dibuat rasio 1:1 agar rapi di header.')
                                         ->columnSpanFull(),
                                     TextInput::make('name')
                                         ->label('Full Name')

@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource;
 use App\Filament\Resources\Pages\Concerns\RedirectsToResourceIndex;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Storage;
 
 class EditUser extends EditRecord
 {
@@ -14,6 +15,22 @@ class EditUser extends EditRecord
     }
 
     protected static string $resource = UserResource::class;
+
+    protected ?string $oldAvatar = null;
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $this->oldAvatar = $this->record->avatar;
+
+        return $data;
+    }
+
+    protected function afterSave(): void
+    {
+        if (filled($this->oldAvatar) && $this->oldAvatar !== $this->record->avatar) {
+            Storage::disk('public')->delete($this->oldAvatar);
+        }
+    }
 
     protected function getHeaderActions(): array
     {
