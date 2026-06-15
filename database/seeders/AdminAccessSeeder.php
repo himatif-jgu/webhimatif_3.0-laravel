@@ -7,6 +7,7 @@ use App\Models\TeamUnit;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class AdminAccessSeeder extends Seeder
 {
@@ -16,6 +17,8 @@ class AdminAccessSeeder extends Seeder
 
     public function run(): void
     {
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         $roles = [
             'admin',
             'ketua',
@@ -85,6 +88,7 @@ class AdminAccessSeeder extends Seeder
             'utilities.create',
             'utilities.update',
             'utilities.delete',
+            'manage_announcements',
         ];
 
         foreach ($permissions as $permission) {
@@ -92,6 +96,15 @@ class AdminAccessSeeder extends Seeder
         }
 
         Role::findByName('admin')->syncPermissions($permissions);
+        foreach ([
+            'ketua',
+            'wakil_ketua',
+            'ketua_departemen',
+            'wakil_ketua_departemen',
+        ] as $role) {
+            Role::findByName($role)->givePermissionTo('manage_announcements');
+        }
+
         Role::findByName('cms_manager')->syncPermissions([
             'app.access',
             'cms.view',

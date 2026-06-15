@@ -5,6 +5,8 @@ namespace App\Filament\Pages;
 use App\Models\AttendanceEvent;
 use App\Models\AttendanceRecord;
 use App\Models\User;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -28,6 +30,15 @@ class AttendanceScanner extends Page
 
     public ?array $data = [];
 
+    public ?int $selectedEventId = null;
+
+    public ?string $selectedEventTitle = null;
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function canAccess(): bool
     {
         $user = auth()->user();
@@ -38,14 +49,27 @@ class AttendanceScanner extends Page
 
         return $user->isAdmin()
             || AttendanceEvent::query()
-                ->where('created_by', $user->id)
+                ->where(fn (Builder $query): Builder => $query
+                    ->where('created_by', $user->id)
+                    ->orWhere('assigned_to', $user->id))
                 ->where('is_active', true)
                 ->exists();
     }
 
     public function mount(): void
     {
+        $eventId = request()->integer('event') ?: null;
+        $event = $eventId ? $this->eventQuery()->find($eventId) : null;
+
+        if ($eventId && ! $event) {
+            abort(403);
+        }
+
+        $this->selectedEventId = $event?->id;
+        $this->selectedEventTitle = $event?->title;
+
         $this->form->fill([
+            'attendance_event_id' => $event?->id,
             'checked_in_at' => now()->format('Y-m-d H:i'),
             'status' => 'present',
         ]);
@@ -56,13 +80,20 @@ class AttendanceScanner extends Page
         return $schema
             ->statePath('data')
             ->components([
+                Hidden::make('attendance_event_id')
+                    ->visible(fn (): bool => filled($this->selectedEventId)),
+                Placeholder::make('selected_event')
+                    ->label('Event')
+                    ->content(fn (): string => $this->selectedEventTitle ?? '-')
+                    ->visible(fn (): bool => filled($this->selectedEventId)),
                 Select::make('attendance_event_id')
                     ->label('Event')
                     ->options(fn (): array => $this->eventQuery()
                         ->pluck('title', 'id')
                         ->all())
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->visible(fn (): bool => blank($this->selectedEventId)),
                 TextInput::make('scan_payload')
                     ->label('QR card / NPM')
                     ->helperText('Scan kartu anggota atau ketik NPM. Sistem akan mengambil angka NPM dari isi QR.')
@@ -153,7 +184,9 @@ class AttendanceScanner extends Page
             ->orderByDesc('starts_at');
 
         if (! auth()->user()?->isAdmin()) {
-            $query->where('created_by', auth()->id());
+            $query->where(fn (Builder $eventQuery): Builder => $eventQuery
+                ->where('created_by', auth()->id())
+                ->orWhere('assigned_to', auth()->id()));
         }
 
         return $query;

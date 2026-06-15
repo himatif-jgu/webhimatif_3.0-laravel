@@ -4,6 +4,7 @@ namespace App\Models;
 
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+use chillerlan\QRCode\Common\EccLevel;
 use chillerlan\QRCode\Data\QRMatrix;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,12 +56,13 @@ class QrCodeItem extends Model
 
     public function imageUrl(): string
     {
-        return route('qr-codes.svg', $this->public_token);
+        return route('qr-codes.show', $this->public_token);
     }
 
     public function qrCodeDataUri(): string
     {
         return (new QRCode(new QROptions([
+            'eccLevel' => EccLevel::H,
             'outputType' => QRCode::OUTPUT_MARKUP_SVG,
             'scale' => max(4, min(12, (int) ceil($this->size / 60))),
             'moduleValues' => $this->moduleValues(),
@@ -132,7 +134,7 @@ class QrCodeItem extends Model
         }
 
         [$minX, $minY, $width, $height] = $viewBox;
-        $logoSize = min($width, $height) * 0.22;
+        $logoSize = min($width, $height) * 0.16;
         $padding = $logoSize * 0.18;
         $backgroundSize = $logoSize + ($padding * 2);
         $backgroundX = $minX + (($width - $backgroundSize) / 2);

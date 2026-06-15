@@ -17,6 +17,7 @@
     $teamItems = $teamUnits ?? collect();
     $leaderItems = $leadershipMembers ?? collect();
     $contactItems = $contactInformation ?? collect();
+    $announcementItems = $landingAnnouncements ?? collect();
 @endphp
 <!-- page wrapper -->
 
@@ -119,6 +120,45 @@
             </div>
         </section>
         <!-- dikti-section end -->
+
+        @if($announcementItems->isNotEmpty())
+            <section id="announcements" class="himatif-announcements-section pt_90 pb_70">
+                <div class="auto-container">
+                    <div class="sec-title centred mb_45">
+                        <span class="sub-title">Announcement</span>
+                        <h2>Informasi Terbaru HIMATIF</h2>
+                    </div>
+                    <div class="three-item-carousel owl-carousel owl-theme owl-nav-none">
+                        @foreach($announcementItems as $announcement)
+                            @php
+                                $announcementImage = $announcement->image
+                                    ? asset('storage/' . $announcement->image)
+                                    : asset('assets/landing/images/logo-himatif.png');
+                            @endphp
+                            <div class="himatif-announcement-card {{ $announcement->image ? '' : 'is-placeholder' }}">
+                                <a href="{{ route('announcements.show', $announcement) }}" class="himatif-announcement-image">
+                                    <img src="{{ $announcementImage }}" alt="{{ $announcement->title }}">
+                                </a>
+                                <div class="himatif-announcement-content">
+                                    <ul class="himatif-announcement-meta">
+                                        <li>{{ ucfirst(str_replace('_', ' ', $announcement->category)) }}</li>
+                                        <li>{{ $announcement->published_at?->format('d M Y') }}</li>
+                                    </ul>
+                                    <h3><a href="{{ route('announcements.show', $announcement) }}">{{ $announcement->title }}</a></h3>
+                                    <p>{{ $announcement->summary ?: str(strip_tags($announcement->content))->limit(120) }}</p>
+                                    <div class="link">
+                                        <a href="{{ route('announcements.show', $announcement) }}"><span>Read More</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="centred mt_20">
+                        <a href="{{ route('announcements.index') }}" class="theme-btn btn-one"><span>Lihat Semua Pengumuman</span></a>
+                    </div>
+                </div>
+            </section>
+        @endif
 
 
         <!-- about-section -->

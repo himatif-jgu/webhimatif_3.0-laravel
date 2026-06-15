@@ -6,6 +6,7 @@ use App\Filament\Resources\QrCodeItemResource\Pages\CreateQrCodeItem;
 use App\Filament\Resources\QrCodeItemResource\Pages\EditQrCodeItem;
 use App\Filament\Resources\QrCodeItemResource\Pages\ListQrCodeItems;
 use App\Models\QrCodeItem;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\ColorPicker;
@@ -78,8 +79,8 @@ class QrCodeItemResource extends Resource
                         ->required()
                         ->helperText('Allowed range: 160-800 px.'),
                     Placeholder::make('image_url')
-                        ->label('SVG URL')
-                        ->content(fn (?QrCodeItem $record): string => $record?->imageUrl() ?? 'Save first to generate the image URL.'),
+                    ->label('QR URL')
+                    ->content(fn (?QrCodeItem $record): string => $record?->imageUrl() ?? 'Save first to generate the image URL.'),
                     Placeholder::make('qr_preview')
                         ->label('QR preview')
                         ->content(fn (?QrCodeItem $record): HtmlString => new HtmlString(
@@ -104,7 +105,7 @@ class QrCodeItemResource extends Resource
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => self::typeOptions()[$state] ?? $state),
                 TextColumn::make('image_url')
-                    ->label('SVG URL')
+                    ->label('QR URL')
                     ->state(fn (QrCodeItem $record): string => $record->imageUrl())
                     ->copyable()
                     ->limit(45),
@@ -125,6 +126,27 @@ class QrCodeItemResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
+                Action::make('viewQr')
+                    ->label('View')
+                    ->icon('heroicon-o-eye')
+                    ->modalHeading(fn (QrCodeItem $record): string => $record->title)
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Close')
+                    ->modalContent(fn (QrCodeItem $record): HtmlString => new HtmlString(
+                        '<div style="display:grid; gap:1rem;">' .
+                        '<div style="display:flex; justify-content:center; border:1px solid #e5e7eb; border-radius:14px; padding:1rem; background:#fff;">' .
+                        '<img src="' . e($record->qrCodeSvgDataUri()) . '" alt="' . e($record->title) . '" style="width:' . e((string) min($record->size, 360)) . 'px; max-width:100%; height:auto;" />' .
+                        '</div>' .
+                        '<div style="display:grid; gap:.35rem;">' .
+                        '<strong style="display:inline-block; width:max-content; border-radius:6px; background:#111827; color:#ffffff; padding:.18rem .45rem;">QR URL</strong>' .
+                        '<a href="' . e($record->imageUrl()) . '" target="_blank" rel="noopener noreferrer" style="word-break:break-all; color:#d97706;">' . e($record->imageUrl()) . '</a>' .
+                        '</div>' .
+                        '<div style="display:grid; gap:.35rem;">' .
+                        '<strong style="display:inline-block; width:max-content; border-radius:6px; background:#111827; color:#ffffff; padding:.18rem .45rem;">Payload</strong>' .
+                        '<code style="display:block; white-space:pre-wrap; word-break:break-word; border:1px solid #e5e7eb; border-radius:10px; background:#f8fafc; color:#111827; padding:.85rem;">' . e($record->payload) . '</code>' .
+                        '</div>' .
+                        '</div>',
+                    )),
                 EditAction::make()
                     ->visible(fn (QrCodeItem $record): bool => self::canManageRecord($record))
                     ->url(fn (QrCodeItem $record): string => self::getUrl('edit', ['record' => $record])),

@@ -6,6 +6,7 @@ use App\Filament\Resources\ShortUrlResource\Pages\CreateShortUrl;
 use App\Filament\Resources\ShortUrlResource\Pages\EditShortUrl;
 use App\Filament\Resources\ShortUrlResource\Pages\ListShortUrls;
 use App\Models\ShortUrl;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
@@ -24,6 +25,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Js;
 
 class ShortUrlResource extends Resource
 {
@@ -128,7 +130,21 @@ class ShortUrlResource extends Resource
                     ->label('Short URL')
                     ->state(fn (ShortUrl $record): string => $record->shortUrl())
                     ->copyable()
+                    ->copyMessage('Short URL disalin')
+                    ->copyMessageDuration(1500)
                     ->limit(45),
+                TextColumn::make('qr_code')
+                    ->label('QRCode')
+                    ->state(fn (): string => '')
+                    ->icon('heroicon-o-qr-code')
+                    ->alignCenter()
+                    ->action(
+                        Action::make('viewQrFromColumn')
+                            ->modalHeading(fn (ShortUrl $record): string => $record->title)
+                            ->modalSubmitAction(false)
+                            ->modalCancelActionLabel('Close')
+                            ->modalContent(fn (ShortUrl $record): HtmlString => self::shortUrlQrModalContent($record)),
+                    ),
                 TextColumn::make('clicks_count')
                     ->numeric()
                     ->sortable()
@@ -149,6 +165,20 @@ class ShortUrlResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
+                Action::make('viewQr')
+                    ->label('View QR')
+                    ->icon('heroicon-o-qr-code')
+                    ->modalHeading(fn (ShortUrl $record): string => $record->title)
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Close')
+                    ->modalContent(fn (ShortUrl $record): HtmlString => self::shortUrlQrModalContent($record)),
+                Action::make('copyShortUrl')
+                    ->label('Salin')
+                    ->icon('heroicon-o-clipboard-document')
+                    ->color('gray')
+                    ->extraAttributes(fn (ShortUrl $record): array => [
+                        'x-on:click.prevent' => 'window.navigator.clipboard.writeText(' . Js::from($record->shortUrl()) . '); $tooltip("Short URL disalin", { timeout: 1500 });',
+                    ]),
                 EditAction::make()
                     ->visible(fn (ShortUrl $record): bool => self::canManageRecord($record))
                     ->url(fn (ShortUrl $record): string => self::getUrl('edit', ['record' => $record])),
@@ -198,6 +228,28 @@ class ShortUrlResource extends Resource
         }
 
         return $user->isAdmin() || (int) $record->user_id === (int) $user->id;
+    }
+
+    public static function shortUrlQrModalContent(ShortUrl $record): HtmlString
+    {
+        return new HtmlString(
+            '<div style="display:grid; gap:1rem;">' .
+            '<div style="display:flex; justify-content:center; border:1px solid #e5e7eb; border-radius:14px; padding:1rem; background:#fff;">' .
+            '<img src="' . e($record->qrCodeDataUri()) . '" alt="' . e($record->title) . '" style="width:320px; max-width:100%; height:auto;" />' .
+            '</div>' .
+            '<div style="display:grid; gap:.35rem;">' .
+            '<strong style="display:inline-block; width:max-content; border-radius:6px; background:#111827; color:#ffffff; padding:.18rem .45rem;">Short URL</strong>' .
+            '<div style="display:flex; gap:.5rem; align-items:center; flex-wrap:wrap;">' .
+            '<a href="' . e($record->shortUrl()) . '" target="_blank" rel="noopener noreferrer" style="word-break:break-all; color:#d97706;">' . e($record->shortUrl()) . '</a>' .
+            '<button type="button" x-on:click="window.navigator.clipboard.writeText(' . e(Js::from($record->shortUrl())) . '); $tooltip(&quot;Short URL disalin&quot;, { timeout: 1500 });" style="border:1px solid #d1d5db; border-radius:8px; background:#fff; color:#111827; padding:.35rem .65rem; font-weight:600;">Salin</button>' .
+            '</div>' .
+            '</div>' .
+            '<div style="display:grid; gap:.35rem;">' .
+            '<strong style="display:inline-block; width:max-content; border-radius:6px; background:#111827; color:#ffffff; padding:.18rem .45rem;">Destination</strong>' .
+            '<code style="display:block; white-space:pre-wrap; word-break:break-word; border:1px solid #e5e7eb; border-radius:10px; background:#f8fafc; color:#111827; padding:.85rem;">' . e($record->original_url) . '</code>' .
+            '</div>' .
+            '</div>',
+        );
     }
 
     public static function getPages(): array

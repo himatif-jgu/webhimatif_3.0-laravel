@@ -31,7 +31,7 @@ class AttendanceRecordResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Attendance';
 
-    protected static ?string $navigationLabel = 'Records';
+    protected static ?string $navigationLabel = 'Attendance History';
 
     protected static ?int $navigationSort = 20;
 
@@ -81,7 +81,7 @@ class AttendanceRecordResource extends Resource
                         ])
                         ->default('manual')
                         ->required(),
-                    DateTimePicker::make('checked_in_at')->default(now())->seconds(false),
+                    DateTimePicker::make('checked_in_at')->default(now())->seconds(false)->timezone(config('app.timezone')),
                     Textarea::make('notes')->columnSpanFull(),
                 ])->columns(2),
         ]);
@@ -92,11 +92,17 @@ class AttendanceRecordResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('event.title')->label('Event')->searchable()->sortable(),
-                TextColumn::make('npm')->label('NPM')->searchable(),
-                TextColumn::make('attendee_name')->searchable()->sortable(),
+                TextColumn::make('event.activity_type')
+                    ->label('Type')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => $state ? str($state)->replace('_', ' ')->title()->toString() : '-')
+                    ->toggleable(),
+                TextColumn::make('event.location')->label('Location')->toggleable(),
+                TextColumn::make('npm')->label('NPM')->searchable()->toggleable(),
+                TextColumn::make('attendee_name')->label('Attendee')->searchable()->sortable()->toggleable(),
                 TextColumn::make('status')->badge()->sortable(),
                 TextColumn::make('source')->badge()->sortable(),
-                TextColumn::make('checked_in_at')->dateTime()->sortable(),
+                TextColumn::make('checked_in_at')->dateTime(timezone: config('app.timezone'))->sortable(),
                 TextColumn::make('checkedInBy.name')->label('Checked by')->toggleable(),
             ])
             ->filters([
@@ -136,17 +142,30 @@ class AttendanceRecordResource extends Resource
             return $query;
         }
 
-        return $query->whereHas('event', fn (Builder $eventQuery): Builder => $eventQuery->where('created_by', $user->id));
+        return $query->where(function (Builder $recordQuery) use ($user): Builder {
+            $recordQuery->where('user_id', $user->id);
+
+            if (filled($user->npm)) {
+                $recordQuery->orWhere('npm', $user->npm);
+            }
+
+            return $recordQuery;
+        });
+    }
+
+    public static function canCreate(): bool
+    {
+        return (bool) auth()->user()?->isAdmin();
     }
 
     public static function canEdit(Model $record): bool
     {
-        return $record instanceof AttendanceRecord && self::canManageRecord($record);
+        return $record instanceof AttendanceRecord && (bool) auth()->user()?->isAdmin();
     }
 
     public static function canDelete(Model $record): bool
     {
-        return $record instanceof AttendanceRecord && self::canManageRecord($record);
+        return $record instanceof AttendanceRecord && (bool) auth()->user()?->isAdmin();
     }
 
     public static function canDeleteAny(): bool
@@ -162,17 +181,13 @@ class AttendanceRecordResource extends Resource
             return false;
         }
 
-        return $user->isAdmin() || (int) $record->event?->created_by === (int) $user->id;
+        return $user->isAdmin();
     }
 
     private static function visibleEventQuery(): Builder
     {
         $query = AttendanceEvent::query()->orderByDesc('starts_at');
         $user = auth()->user();
-
-        if ($user && ! $user->isAdmin()) {
-            $query->where('created_by', $user->id);
-        }
 
         return $query;
     }

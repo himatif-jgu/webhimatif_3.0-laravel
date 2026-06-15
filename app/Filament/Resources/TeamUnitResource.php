@@ -42,16 +42,29 @@ class TeamUnitResource extends Resource
     {
         return $schema->components([
             Section::make('Team unit')
-                ->description('This appears in Meet Our Team and can open a detail page.')
+                ->description('Konten ini tampil di Meet Our Team. Saat card diklik, user akan melihat deskripsi divisi dan anggota aktif yang terhubung ke divisi ini.')
                 ->schema([
-                    TextInput::make('name')->required()->maxLength(255),
-                    TextInput::make('slug')->maxLength(255)->unique(ignoreRecord: true),
-                    TextInput::make('subtitle')->maxLength(255),
+                    TextInput::make('name')
+                        ->label('Team / division name')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('slug')
+                        ->helperText('Kosongkan untuk auto-generate dari nama.')
+                        ->maxLength(255)
+                        ->unique(ignoreRecord: true),
+                    TextInput::make('subtitle')
+                        ->label('Short subtitle')
+                        ->helperText('Teks pendek yang tampil di card Meet Our Team.')
+                        ->maxLength(255),
                     TextInput::make('icon')
                         ->default('users')
                         ->helperText('Use a Feather icon name, for example users, code, file-text, credit-card.'),
-                    RichEditor::make('description')->columnSpanFull(),
+                    RichEditor::make('description')
+                        ->label('About description')
+                        ->helperText('Isi penjelasan tentang divisi, fungsi, program kerja, dan tanggung jawabnya.')
+                        ->columnSpanFull(),
                     FileUpload::make('image_path')
+                        ->label('Cover image')
                         ->image()
                         ->disk('public')
                         ->directory('team-units')

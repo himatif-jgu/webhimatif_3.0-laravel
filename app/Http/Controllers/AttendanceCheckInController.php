@@ -7,15 +7,28 @@ use App\Models\AttendanceRecord;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AttendanceCheckInController extends Controller
 {
-    public function show(string $token): View
+    public function show(string $token): View|RedirectResponse
     {
         $event = AttendanceEvent::where('qr_token', $token)->firstOrFail();
 
-        return view('attendance.check-in', compact('event'));
+        if (! Auth::check()) {
+            return redirect()->guest(route('filament.app.auth.login'));
+        }
+
+        $user = Auth::user();
+        $attendanceRecord = blank($user->npm)
+            ? null
+            : AttendanceRecord::query()
+                ->where('attendance_event_id', $event->id)
+                ->where('npm', $user->npm)
+                ->first();
+
+        return view('attendance.check-in', compact('event', 'user', 'attendanceRecord'));
     }
 
     public function qr(string $token): Response
@@ -33,7 +46,7 @@ class AttendanceCheckInController extends Controller
         $user = $request->user();
 
         if (! $user) {
-            return redirect()->route('filament.app.auth.login');
+            return redirect()->guest(route('filament.app.auth.login'));
         }
 
         if (! $event->isCheckInOpen()) {

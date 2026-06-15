@@ -7,12 +7,47 @@
             align-items: start;
         }
 
+        .attendance-scanner-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(17, 24, 39, 0.12);
+            border-radius: 999px;
+            background: rgb(255, 255, 255);
+            padding: 8px 13px;
+            color: rgb(17, 24, 39);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .attendance-scanner-back:hover {
+            background: rgb(249, 250, 251);
+        }
+
+        .dark .attendance-scanner-back {
+            background: rgb(17, 24, 39);
+            border-color: rgba(148, 163, 184, 0.22);
+            color: rgb(248, 250, 252);
+        }
+
+        .dark .attendance-scanner-back:hover {
+            background: rgb(30, 41, 59);
+        }
+
         .attendance-scanner-card {
             background: var(--fi-color-white, #ffffff);
             border: 1px solid rgba(17, 24, 39, 0.12);
             border-radius: 14px;
             box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
             padding: 20px;
+        }
+
+        .dark .attendance-scanner-card {
+            background: rgb(17, 24, 39);
+            border-color: rgba(148, 163, 184, 0.22);
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
         }
 
         .attendance-scanner-header {
@@ -31,12 +66,20 @@
             margin: 0;
         }
 
+        .dark .attendance-scanner-title {
+            color: rgb(248, 250, 252);
+        }
+
         .attendance-scanner-copy {
             color: rgb(75, 85, 99);
             font-size: 14px;
             line-height: 1.6;
             margin: 4px 0 0;
             max-width: 680px;
+        }
+
+        .dark .attendance-scanner-copy {
+            color: rgb(203, 213, 225);
         }
 
         .attendance-scanner-actions {
@@ -94,11 +137,18 @@
         .attendance-scanner-status {
             border: 1px solid rgba(17, 24, 39, 0.12);
             border-radius: 10px;
+            background: rgb(255, 255, 255);
             color: rgb(75, 85, 99);
             font-size: 14px;
             line-height: 1.5;
             margin-top: 16px;
             padding: 12px 14px;
+        }
+
+        .dark .attendance-scanner-status {
+            background: rgb(15, 23, 42);
+            border-color: rgba(148, 163, 184, 0.22);
+            color: rgb(226, 232, 240);
         }
 
         .attendance-scanner-status[data-type="error"] {
@@ -107,10 +157,22 @@
             color: rgb(185, 28, 28);
         }
 
+        .dark .attendance-scanner-status[data-type="error"] {
+            background: rgba(127, 29, 29, 0.35);
+            border-color: rgba(248, 113, 113, 0.35);
+            color: rgb(254, 202, 202);
+        }
+
         .attendance-scanner-status[data-type="success"] {
             background: rgb(240, 253, 244);
             border-color: rgb(187, 247, 208);
             color: rgb(21, 128, 61);
+        }
+
+        .dark .attendance-scanner-status[data-type="success"] {
+            background: rgba(20, 83, 45, 0.35);
+            border-color: rgba(74, 222, 128, 0.35);
+            color: rgb(187, 247, 208);
         }
 
         .attendance-scanner-form {
@@ -121,6 +183,46 @@
             display: flex;
             justify-content: flex-start;
             margin-top: 22px;
+        }
+
+        .attendance-scanner-card .fi-fo-field-wrp-label span,
+        .attendance-scanner-card .fi-fo-placeholder-label,
+        .attendance-scanner-card .fi-fo-placeholder-content {
+            color: rgb(17, 24, 39);
+        }
+
+        .attendance-scanner-card .fi-fo-field-wrp-helper-text,
+        .attendance-scanner-card .fi-fo-field-wrp-error-message {
+            color: rgb(75, 85, 99);
+        }
+
+        .dark .attendance-scanner-card .fi-fo-field-wrp-label span,
+        .dark .attendance-scanner-card .fi-fo-placeholder-label,
+        .dark .attendance-scanner-card .fi-fo-placeholder-content {
+            color: rgb(248, 250, 252);
+        }
+
+        .dark .attendance-scanner-card .fi-fo-field-wrp-helper-text {
+            color: rgb(203, 213, 225);
+        }
+
+        .dark .attendance-scanner-card .fi-fo-field-wrp-error-message {
+            color: rgb(252, 165, 165);
+        }
+
+        .dark .attendance-scanner-card input,
+        .dark .attendance-scanner-card select,
+        .dark .attendance-scanner-card textarea,
+        .dark .attendance-scanner-card .fi-input,
+        .dark .attendance-scanner-card .fi-select-input {
+            background-color: rgb(15, 23, 42);
+            border-color: rgba(148, 163, 184, 0.32);
+            color: rgb(248, 250, 252);
+        }
+
+        .dark .attendance-scanner-card input::placeholder,
+        .dark .attendance-scanner-card textarea::placeholder {
+            color: rgb(148, 163, 184);
         }
 
         @media (max-width: 1024px) {
@@ -152,6 +254,11 @@
             }
         }
     </style>
+
+    <a class="attendance-scanner-back" href="{{ route('filament.app.resources.attendance-events.index') }}">
+        <span aria-hidden="true">←</span>
+        Kembali ke Attendance Events
+    </a>
 
     <div x-data="attendanceScanner($wire)" x-on:beforeunload.window="stopCamera()" class="attendance-scanner-grid">
         <section class="attendance-scanner-card">

@@ -31,6 +31,7 @@
 <link href="{{ asset('assets/landing/css/module-css/contact.css') }}" rel="stylesheet">
 <link href="{{ asset('assets/landing/css/module-css/page-title.css') }}" rel="stylesheet">
 <link href="{{ asset('assets/landing/css/responsive.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/landing/css/himatif-announcements.css') }}" rel="stylesheet">
 
 
 

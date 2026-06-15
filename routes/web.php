@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AttendanceCheckInController;
+use App\Http\Controllers\AttendanceEventPdfExportController;
 use App\Http\Controllers\LandingPageBlogController;
 use App\Http\Controllers\QrCodeSvgController;
 use App\Http\Controllers\ShortUrlRedirectController;
 use App\Models\ContactInformation;
+use App\Models\Announcement;
 use App\Models\FoundationContent;
 use App\Models\HistoryEntry;
 use App\Models\LandingContent;
@@ -17,6 +19,12 @@ Route::get('/', function () {
         ->published()
         ->latest('published_at')
         ->limit(3)
+        ->get();
+    $landingAnnouncements = Announcement::query()
+        ->published()
+        ->visibleOnLanding()
+        ->orderedForDisplay()
+        ->limit(6)
         ->get();
 
     $landingContents = LandingContent::active()
@@ -32,6 +40,7 @@ Route::get('/', function () {
     
     return view('landingpage.pages.home', compact(
         'latestBlogs',
+        'landingAnnouncements',
         'landingContents',
         'historyEntries',
         'foundationContents',
@@ -41,10 +50,39 @@ Route::get('/', function () {
     ));
 })->name('home');
 
+Route::get('/announcements', function () {
+    $announcements = Announcement::query()
+        ->published()
+        ->visibleOnLanding()
+        ->orderedForDisplay()
+        ->paginate(9);
+
+    return view('landingpage.pages.announcements.index', compact('announcements'));
+})->name('announcements.index');
+
+Route::get('/announcements/{announcement:slug}', function (Announcement $announcement) {
+    abort_unless(
+        $announcement->is_published
+            && $announcement->published_at
+            && $announcement->published_at->lte(now())
+            && (! $announcement->expires_at || $announcement->expires_at->gte(now()))
+            && in_array($announcement->visibility, ['public', 'landing_only'], true),
+        404,
+    );
+
+    return view('landingpage.pages.announcements.show', compact('announcement'));
+})->name('announcements.show');
+
 Route::get('/team/{teamUnit:slug}', function (TeamUnit $teamUnit) {
     abort_unless($teamUnit->is_active, 404);
 
-    return view('landingpage.pages.team.show', compact('teamUnit'));
+    $members = $teamUnit->users()
+        ->with('roles')
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get();
+
+    return view('landingpage.pages.team.show', compact('teamUnit', 'members'));
 })->name('team.show');
 
 Route::get('/attendance/{token}', [AttendanceCheckInController::class, 'show'])
@@ -53,10 +91,17 @@ Route::get('/attendance/{token}/qr.svg', [AttendanceCheckInController::class, 'q
     ->name('attendance.qr');
 Route::post('/attendance/{token}', [AttendanceCheckInController::class, 'store'])
     ->name('attendance.check-in.store');
+Route::get('/attendance-events/{attendanceEvent}/export.pdf', AttendanceEventPdfExportController::class)
+    ->middleware('auth')
+    ->name('attendance-events.export-pdf');
 
 Route::get('/s/{code}', ShortUrlRedirectController::class)
     ->where('code', '[A-Za-z0-9-]+')
     ->name('short-urls.redirect');
+
+Route::get('/qr/{token}', QrCodeSvgController::class)
+    ->where('token', '[A-Za-z0-9]+')
+    ->name('qr-codes.show');
 
 Route::get('/qr/{token}.svg', QrCodeSvgController::class)
     ->where('token', '[A-Za-z0-9]+')

@@ -23,8 +23,12 @@ use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\View;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -49,98 +53,138 @@ class UserResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
-            Section::make('Account')
-                ->description('Give each person the least role they need for their work.')
-                ->schema([
-                    TextInput::make('name')
-                        ->required()
-                        ->maxLength(255),
-                    TextInput::make('username')
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    TextInput::make('email')
-                        ->email()
-                        ->required()
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    TextInput::make('password')
-                        ->password()
-                        ->revealable()
-                        ->required(fn (string $operation): bool => $operation === 'create')
-                        ->dehydrated(fn (?string $state): bool => filled($state))
-                        ->helperText('Leave blank when you do not want to change the password.'),
-                    Select::make('roles')
-                        ->relationship('roles', 'name')
-                        ->getOptionLabelFromRecordUsing(fn (Role $record): string => self::formatRoleName($record->name))
-                        ->multiple()
-                        ->preload()
-                        ->searchable()
-                        ->required()
-                        ->visible(fn (): bool => (bool) auth()->user()?->isAdmin()),
-                    Select::make('permissions')
-                        ->relationship('permissions', 'name')
-                        ->multiple()
-                        ->preload()
-                        ->searchable()
-                        ->helperText('Use direct permissions only for exceptions. Prefer assigning permissions through roles.')
-                        ->visible(fn (): bool => (bool) auth()->user()?->isAdmin()),
-                    Toggle::make('is_active')
-                        ->default(true)
-                        ->required()
-                        ->visible(fn (): bool => (bool) auth()->user()?->isAdmin()),
-                ])->columns(2),
+        return $schema
+            ->columns([
+                'default' => 1,
+                'xl' => 5,
+            ])
+            ->components([
+                View::make('filament.resources.users.profile-summary-card')
+                    ->viewData(fn (?User $record): array => ['record' => $record])
+                    ->visible(fn (?User $record): bool => filled($record?->id))
+                    ->columnSpan([
+                        'default' => 1,
+                        'xl' => 2,
+                    ]),
 
-            Section::make('Profile')
-                ->schema([
-                    FileUpload::make('avatar')
-                        ->image()
-                        ->disk('public')
-                        ->directory('users/avatars')
-                        ->visibility('public'),
-                    TextInput::make('npm')
-                        ->label('NPM')
-                        ->maxLength(255),
-                    TextInput::make('batch_year')
-                        ->label('Batch year')
-                        ->numeric()
-                        ->minValue(2000)
-                        ->maxValue(2100),
-                    Select::make('team_unit_id')
-                        ->label('Division / Department')
-                        ->options(fn (): array => self::divisionOptions())
-                        ->searchable()
-                        ->helperText('Role menentukan jabatan, field ini menentukan divisi/departemennya.'),
-                    Select::make('gender')
-                        ->options([
-                            'male' => 'Male',
-                            'female' => 'Female',
+                Group::make([
+                    Tabs::make('Profile settings')
+                        ->persistTabInQueryString('profile_tab')
+                        ->tabs([
+                            Tab::make('Edit Profile')
+                                ->schema([
+                                    FileUpload::make('avatar')
+                                        ->label('Profile Image')
+                                        ->avatar()
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('users/avatars')
+                                        ->visibility('public')
+                                        ->columnSpanFull(),
+                                    TextInput::make('name')
+                                        ->label('Full Name')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('email')
+                                        ->email()
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->unique(ignoreRecord: true),
+                                    TextInput::make('phone')
+                                        ->tel()
+                                        ->maxLength(255),
+                                    TextInput::make('npm')
+                                        ->label('NPM')
+                                        ->maxLength(255),
+                                    Select::make('team_unit_id')
+                                        ->label('Division / Department')
+                                        ->options(fn (): array => self::divisionOptions())
+                                        ->searchable()
+                                        ->helperText('Role menentukan jabatan, field ini menentukan divisi/departemennya.'),
+                                    TextInput::make('batch_year')
+                                        ->label('Batch year')
+                                        ->numeric()
+                                        ->minValue(2000)
+                                        ->maxValue(2100),
+                                    Select::make('gender')
+                                        ->options([
+                                            'male' => 'Male',
+                                            'female' => 'Female',
+                                        ]),
+                                    DatePicker::make('birth_date'),
+                                    Textarea::make('address')
+                                        ->rows(3)
+                                        ->columnSpanFull(),
+                                    Textarea::make('bio')
+                                        ->rows(4)
+                                        ->columnSpanFull(),
+                                ])
+                                ->columns(2),
+
+                            Tab::make('Change Password')
+                                ->schema([
+                                    TextInput::make('password')
+                                        ->label('New Password')
+                                        ->password()
+                                        ->revealable()
+                                        ->required(fn (string $operation): bool => $operation === 'create')
+                                        ->dehydrated(fn (?string $state): bool => filled($state))
+                                        ->helperText('Leave blank when you do not want to change the password.')
+                                        ->columnSpanFull(),
+                                ])
+                                ->columns(2),
+
+                            Tab::make('Social Links')
+                                ->schema([
+                                    TextInput::make('instagram_url')
+                                        ->label('Instagram')
+                                        ->url()
+                                        ->maxLength(255),
+                                    TextInput::make('linkedin_url')
+                                        ->label('LinkedIn')
+                                        ->url()
+                                        ->maxLength(255),
+                                    TextInput::make('website_url')
+                                        ->label('Website')
+                                        ->url()
+                                        ->maxLength(255)
+                                        ->columnSpanFull(),
+                                ])
+                                ->columns(2),
+
+                            Tab::make('Account Access')
+                                ->schema([
+                                    TextInput::make('username')
+                                        ->maxLength(255)
+                                        ->unique(ignoreRecord: true),
+                                    Select::make('roles')
+                                        ->relationship('roles', 'name')
+                                        ->getOptionLabelFromRecordUsing(fn (Role $record): string => self::formatRoleName($record->name))
+                                        ->multiple()
+                                        ->preload()
+                                        ->searchable()
+                                        ->required()
+                                        ->visible(fn (): bool => (bool) auth()->user()?->isAdmin()),
+                                    Select::make('permissions')
+                                        ->relationship('permissions', 'name')
+                                        ->multiple()
+                                        ->preload()
+                                        ->searchable()
+                                        ->helperText('Use direct permissions only for exceptions. Prefer assigning permissions through roles.')
+                                        ->visible(fn (): bool => (bool) auth()->user()?->isAdmin()),
+                                    Toggle::make('is_active')
+                                        ->default(true)
+                                        ->required()
+                                        ->visible(fn (): bool => (bool) auth()->user()?->isAdmin()),
+                                ])
+                                ->visible(fn (): bool => (bool) auth()->user()?->isAdmin())
+                                ->columns(2),
                         ]),
-                    DatePicker::make('birth_date'),
-                    TextInput::make('phone')
-                        ->tel()
-                        ->maxLength(255),
-                    Textarea::make('address')
-                        ->rows(3)
-                        ->columnSpanFull(),
-                    Textarea::make('bio')
-                        ->rows(3)
-                        ->columnSpanFull(),
-                ])->columns(3),
-
-            Section::make('Social links')
-                ->schema([
-                    TextInput::make('instagram_url')
-                        ->url()
-                        ->maxLength(255),
-                    TextInput::make('linkedin_url')
-                        ->url()
-                        ->maxLength(255),
-                    TextInput::make('website_url')
-                        ->url()
-                        ->maxLength(255),
-                ])->columns(3),
-        ]);
+                ])->columnSpan([
+                    'default' => 1,
+                    'xl' => fn (?User $record): int => filled($record?->id) ? 3 : 5,
+                ]),
+            ]);
     }
 
     public static function infolist(Schema $schema): Schema
